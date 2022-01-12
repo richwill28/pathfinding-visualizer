@@ -1,95 +1,13 @@
-function Row() {
-  return (
-    <div className="flex flex-row">
-      <canvas className="w-[20px] h-[20px] border border-blue-500"></canvas>
-      <canvas className="w-[20px] h-[20px] border-y border-r border-blue-500"></canvas>
-      <canvas className="w-[20px] h-[20px] border-y border-r border-blue-500"></canvas>
-      <canvas className="w-[20px] h-[20px] border-y border-r border-blue-500"></canvas>
-      <canvas className="w-[20px] h-[20px] border-y border-r border-blue-500"></canvas>
-      <canvas className="w-[20px] h-[20px] border-y border-r border-blue-500"></canvas>
-      <canvas className="w-[20px] h-[20px] border-y border-r border-blue-500"></canvas>
-      <canvas className="w-[20px] h-[20px] border-y border-r border-blue-500"></canvas>
-      <canvas className="w-[20px] h-[20px] border-y border-r border-blue-500"></canvas>
-      <canvas className="w-[20px] h-[20px] border-y border-r border-blue-500"></canvas>
-      <canvas className="w-[20px] h-[20px] border-y border-r border-blue-500"></canvas>
-      <canvas className="w-[20px] h-[20px] border-y border-r border-blue-500"></canvas>
-      <canvas className="w-[20px] h-[20px] border-y border-r border-blue-500"></canvas>
-      <canvas className="w-[20px] h-[20px] border-y border-r border-blue-500"></canvas>
-      <canvas className="w-[20px] h-[20px] border-y border-r border-blue-500"></canvas>
-      <canvas className="w-[20px] h-[20px] border-y border-r border-blue-500"></canvas>
-      <canvas className="w-[20px] h-[20px] border-y border-r border-blue-500"></canvas>
-      <canvas className="w-[20px] h-[20px] border-y border-r border-blue-500"></canvas>
-      <canvas className="w-[20px] h-[20px] border-y border-r border-blue-500"></canvas>
-      <canvas className="w-[20px] h-[20px] border-y border-r border-blue-500"></canvas>
-      <canvas className="w-[20px] h-[20px] border-y border-r border-blue-500"></canvas>
-      <canvas className="w-[20px] h-[20px] border-y border-r border-blue-500"></canvas>
-      <canvas className="w-[20px] h-[20px] border-y border-r border-blue-500"></canvas>
-      <canvas className="w-[20px] h-[20px] border-y border-r border-blue-500"></canvas>
-      <canvas className="w-[20px] h-[20px] border-y border-r border-blue-500"></canvas>
-      <canvas className="w-[20px] h-[20px] border-y border-r border-blue-500"></canvas>
-      <canvas className="w-[20px] h-[20px] border-y border-r border-blue-500"></canvas>
-      <canvas className="w-[20px] h-[20px] border-y border-r border-blue-500"></canvas>
-      <canvas className="w-[20px] h-[20px] border-y border-r border-blue-500"></canvas>
-      <canvas className="w-[20px] h-[20px] border-y border-r border-blue-500"></canvas>
-      <canvas className="w-[20px] h-[20px] border-y border-r border-blue-500"></canvas>
-      <canvas className="w-[20px] h-[20px] border-y border-r border-blue-500"></canvas>
-      <canvas className="w-[20px] h-[20px] border-y border-r border-blue-500"></canvas>
-      <canvas className="w-[20px] h-[20px] border-y border-r border-blue-500"></canvas>
-      <canvas className="w-[20px] h-[20px] border-y border-r border-blue-500"></canvas>
-      <canvas className="w-[20px] h-[20px] border-y border-r border-blue-500"></canvas>
-      <canvas className="w-[20px] h-[20px] border-y border-r border-blue-500"></canvas>
-      <canvas className="w-[20px] h-[20px] border-y border-r border-blue-500"></canvas>
-      <canvas className="w-[20px] h-[20px] border-y border-r border-blue-500"></canvas>
-      <canvas className="w-[20px] h-[20px] border-y border-r border-blue-500"></canvas>
-      <canvas className="w-[20px] h-[20px] border-y border-r border-blue-500"></canvas>
-      <canvas className="w-[20px] h-[20px] border-y border-r border-blue-500"></canvas>
-      <canvas className="w-[20px] h-[20px] border-y border-r border-blue-500"></canvas>
-      <canvas className="w-[20px] h-[20px] border-y border-r border-blue-500"></canvas>
-      <canvas className="w-[20px] h-[20px] border-y border-r border-blue-500"></canvas>
-      <canvas className="w-[20px] h-[20px] border-y border-r border-blue-500"></canvas>
-      <canvas className="w-[20px] h-[20px] border-y border-r border-blue-500"></canvas>
-      <canvas className="w-[20px] h-[20px] border-y border-r border-blue-500"></canvas>
-      <canvas className="w-[20px] h-[20px] border-y border-r border-blue-500"></canvas>
-      <canvas className="w-[20px] h-[20px] border-y border-r border-blue-500"></canvas>
-    </div>
-  );
-}
+import Row from "./Row";
+import { MAX_ROW } from "../constants";
 
 function Body() {
-  return (
-    <div className="flex flex-col">
-      <Row />
-      <Row />
-      <Row />
-      <Row />
-      <Row />
-      <Row />
-      <Row />
-      <Row />
-      <Row />
-      <Row />
-      <Row />
-      <Row />
-      <Row />
-      <Row />
-      <Row />
-      <Row />
-      <Row />
-      <Row />
-      <Row />
-      <Row />
-      <Row />
-      <Row />
-      <Row />
-      <Row />
-      <Row />
-      <Row />
-      <Row />
-      <Row />
-      <Row />
-      <Row />
-    </div>
-  );
+  const rows = [];
+  for (let i = 0; i < MAX_ROW; i++) {
+    rows.push(<Row rowIndex={i} />);
+  }
+
+  return <div className="flex flex-col">{rows.map((row) => row)}</div>;
 }
 
 export default Body;
