@@ -1,11 +1,23 @@
-import { MAX_ROW } from "../constants";
+import isEqual from "lodash/isEqual";
+import { MAX_ROW } from "../constants/variable";
+import { ICON_START } from "../constants/icon";
+import { ICON_END } from "../constants/icon";
 
-function Cell({ rowIndex, colIndex }) {
-  let style = "w-[20px] h-[20px] border-t border-r border-sky-500";
-  style += colIndex === 0 ? " border-l" : "";
-  style += rowIndex === MAX_ROW - 1 ? " border-b" : "";
+function Cell({ index, startNode, endNode }) {
+  let style =
+    "w-[20px] h-[20px] object-scale-down border-t border-r border-sky-500";
+  style += index.col === 0 ? " border-l" : "";
+  style += index.row === MAX_ROW - 1 ? " border-b" : "";
 
-  return <canvas id={`(${rowIndex}, ${colIndex})`} className={style} />;
+  return (
+    <div className={style}>
+      {isEqual(index, startNode)
+        ? ICON_START
+        : isEqual(index, endNode)
+        ? ICON_END
+        : ""}
+    </div>
+  );
 }
 
 export default Cell;

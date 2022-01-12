@@ -1,10 +1,16 @@
 import Cell from "./Cell";
-import { MAX_COL } from "../constants";
+import { MAX_COL } from "../constants/variable";
 
-function Row({ rowIndex }) {
+function Row({ index, startNode, endNode }) {
   const cells = [];
   for (let i = 0; i < MAX_COL; i += 1) {
-    cells.push(<Cell rowIndex={rowIndex} colIndex={i} />);
+    cells.push(
+      <Cell
+        index={{ row: index, col: i }}
+        startNode={startNode}
+        endNode={endNode}
+      />
+    );
   }
 
   return <div className="flex flex-row">{cells.map((cell) => cell)}</div>;
