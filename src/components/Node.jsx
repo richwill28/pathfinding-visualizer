@@ -1,58 +1,27 @@
 import { useEffect, useState } from "react";
 import isEqual from "lodash/isEqual";
-import { MAX_ROW } from "../constants/variable";
 import {
-  STYLE_NODE,
-  STYLE_START,
-  STYLE_END,
-  STYLE_VISITED,
-  STYLE_WALL,
-} from "../constants/style";
+  STATE_START,
+  STATE_END,
+  STATE_UNVISITED,
+  STATE_VISITED,
+  STATE_WALL,
+} from "../utils/constants/state";
 
-const STATE_START = STYLE_NODE + " " + STYLE_START;
-const STATE_END = STYLE_NODE + " " + STYLE_END;
-const STATE_UNVISITED = STYLE_NODE;
-const STATE_VISITED = STYLE_NODE + " " + STYLE_VISITED;
-const STATE_WALL = STYLE_NODE + " " + STYLE_WALL;
+function Node({ index, mouseState, generateState, startState, endState }) {
+  const [startNode, setStartNode] = startState;
+  const [endNode, setEndNode] = endState;
 
-const INITIAL_START = { row: 9, col: 9 };
-const INITIAL_END = { row: 29, col: 39 };
-
-function setNode(generate, state, setState) {
-  if (generate === "WALL") {
-    if (state !== STATE_START && state !== STATE_END) {
-      setState(STATE_WALL);
-    }
-  } else if (generate === "START") {
-    if (state !== STATE_END) {
-      setState(STATE_START);
-    }
-  } else if (generate === "END") {
-    if (state !== STATE_START) {
-      setState(STATE_END);
-    }
-  }
-}
-
-function Node({ index, mouseState, generateState }) {
   const [state, setState] = useState(STATE_UNVISITED);
-
-  // Add additional style for nodes in the first column or last row
-  useEffect(() => {
-    let additonalStyle = "";
-    additonalStyle += index.col === 0 ? " border-l" : "";
-    additonalStyle += index.row === MAX_ROW - 1 ? " border-b" : "";
-    setState((prevStyle) => prevStyle + additonalStyle);
-  }, [state]);
 
   // Set initial position for start and end node
   useEffect(() => {
-    if (isEqual(index, INITIAL_START)) {
+    if (isEqual(index, startNode)) {
       setState(STATE_START);
-    } else if (isEqual(index, INITIAL_END)) {
+    } else if (isEqual(index, endNode)) {
       setState(STATE_END);
     }
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const [isMouseDown, setIsMouseDown] = mouseState;
 
@@ -76,6 +45,11 @@ function Node({ index, mouseState, generateState }) {
   const handleMouseOver = (event) => {
     if (isMouseDown) {
       setNode(generate, state, setState);
+      if (generate === "START") {
+        setStartNode(index);
+      } else if (generate === "END") {
+        setEndNode(index);
+      }
     }
   };
 
@@ -93,13 +67,31 @@ function Node({ index, mouseState, generateState }) {
 
   return (
     <div
+      id={index.row + " " + index.col}
       className={state}
       onMouseDown={handleMouseDown}
       onMouseUp={handleMouseUp}
       onMouseOver={handleMouseOver}
       onMouseOut={handleMouseOut}
+      setstate={setState}
     ></div>
   );
+}
+
+function setNode(generate, state, setState) {
+  if (generate === "WALL") {
+    if (state !== STATE_START && state !== STATE_END) {
+      setState(STATE_WALL);
+    }
+  } else if (generate === "START") {
+    if (state !== STATE_END) {
+      setState(STATE_START);
+    }
+  } else if (generate === "END") {
+    if (state !== STATE_START) {
+      setState(STATE_END);
+    }
+  }
 }
 
 export default Node;

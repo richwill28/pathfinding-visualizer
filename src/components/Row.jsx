@@ -1,20 +1,22 @@
 import Node from "./Node";
-import { MAX_COL } from "../constants/variable";
 
-function Row({ index, mouseState, generateState }) {
-  const nodes = [];
-  for (let i = 0; i < MAX_COL; i += 1) {
-    nodes.push(
-      <Node
-        key={`node-(${index}, ${i})`}
-        index={{ row: index, col: i }}
-        mouseState={mouseState}
-        generateState={generateState}
-      />
-    );
-  }
-
-  return <div className="flex flex-row">{nodes.map((node) => node)}</div>;
+function Row({ row, mouseState, generateState, startState, endState }) {
+  return (
+    <div className="flex flex-row">
+      {row.map((node, nodeIdx) => {
+        return (
+          <Node
+            key={nodeIdx}
+            index={{ row: node.row, col: node.col }}
+            mouseState={mouseState}
+            generateState={generateState}
+            startState={startState}
+            endState={endState}
+          />
+        );
+      })}
+    </div>
+  );
 }
 
 export default Row;
