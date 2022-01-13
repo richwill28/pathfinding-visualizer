@@ -34,7 +34,7 @@ function setNode(generate, state, setState) {
   }
 }
 
-function Node({ index, startState, endState, mouseState, generateState }) {
+function Node({ index, mouseState, generateState }) {
   const [state, setState] = useState(STATE_UNVISITED);
 
   // Add additional style for nodes in the first column or last row
