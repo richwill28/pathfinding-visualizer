@@ -43,7 +43,7 @@ function Node({ index, mouseState, generateState }) {
     additonalStyle += index.col === 0 ? " border-l" : "";
     additonalStyle += index.row === MAX_ROW - 1 ? " border-b" : "";
     setState((prevStyle) => prevStyle + additonalStyle);
-  }, []);
+  }, [state]);
 
   // Set initial position for start and end node
   useEffect(() => {
