@@ -1,8 +1,10 @@
 import dijkstra from "../utils/algorithms/dijkstra";
+import animate from "../utils/animate";
 
 export default function Header({ grid, startNode, endNode }) {
   const handleClick = () => {
-    dijkstra(grid, startNode, endNode);
+    const { visitedNodes, shortestPath } = dijkstra(grid, startNode, endNode);
+    animate(visitedNodes, shortestPath);
   };
 
   return (

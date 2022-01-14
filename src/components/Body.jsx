@@ -110,6 +110,7 @@ function createNode(row, col, startNode, endNode) {
     isEnd: row === endNode.row && col === endNode.col,
     isVisited: false,
     isWall: false,
+    parent: null,
   };
 }
 

@@ -1,20 +1,36 @@
 import { MAX_ROW, MAX_COL } from "../constants/variable";
 
+// Inefficient implementation without using priority queue
 export default function dijkstra(grid, startNode, endNode) {
+  const visitedNodes = [];
+
+  // Dijkstra's routine
   grid[startNode.row][startNode.col].distance = 0;
   const unvisitedNodes = getNodes(grid);
   while (unvisitedNodes.length > 0) {
     unvisitedNodes.sort((a, b) => a.distance - b.distance);
     const node = unvisitedNodes.shift();
-    if (node.isWall) continue;
-    if (node.distance === Infinity) return;
+    if (node.isWall) continue; // skip wall
+    if (node.distance === Infinity) break; // trapped
     node.isVisited = true;
-    if (node.row === endNode.row && node.col === endNode.col) return;
+    visitedNodes.push(node);
+    if (node.row === endNode.row && node.col === endNode.col) break; // finish
     const neighbors = getUnvisitedNeighbors(grid, node);
     for (const neighbor of neighbors) {
       neighbor.distance = node.distance + 1;
+      neighbor.parent = node;
     }
   }
+
+  // Get shortest path
+  const shortestPath = [];
+  let node = grid[endNode.row][endNode.col];
+  while (node !== null) {
+    shortestPath.unshift(node);
+    node = node.parent;
+  }
+
+  return { visitedNodes, shortestPath };
 }
 
 function getNodes(grid) {
@@ -34,5 +50,5 @@ function getUnvisitedNeighbors(grid, node) {
   if (row < MAX_ROW - 1) neighbors.push(grid[row + 1][col]);
   if (col > 0) neighbors.push(grid[row][col - 1]);
   if (col < MAX_COL - 1) neighbors.push(grid[row][col + 1]);
-  return neighbors;
+  return neighbors.filter((neighbor) => !neighbor.isVisited);
 }
