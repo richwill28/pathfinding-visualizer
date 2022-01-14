@@ -1,7 +1,8 @@
 import {
   STYLE_START,
   STYLE_END,
-  STYLE_WALL,
+  STYLE_WALL_LIGHT,
+  STYLE_WALL_DARK,
   STYLE_UNVISITED,
   STYLE_VISITED,
 } from "../utils/constants/style";
@@ -17,13 +18,16 @@ export default function Node({
   onMouseUp,
   onMouseEnter,
   onMouseOut,
+  isDark,
 }) {
   const style = isStart
     ? STYLE_START
     : isEnd
     ? STYLE_END
-    : isWall
-    ? STYLE_WALL
+    : isWall && isDark
+    ? STYLE_WALL_LIGHT
+    : isWall && !isDark
+    ? STYLE_WALL_DARK
     : isVisited
     ? STYLE_VISITED
     : STYLE_UNVISITED;

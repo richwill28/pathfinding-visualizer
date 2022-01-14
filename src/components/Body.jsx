@@ -2,7 +2,12 @@ import { useEffect, useState } from "react";
 import { MAX_ROW, MAX_COL } from "../utils/constants/variable";
 import Node from "./Node";
 
-export default function Body({ startNodeState, endNodeState, gridState }) {
+export default function Body({
+  startNodeState,
+  endNodeState,
+  gridState,
+  isDark,
+}) {
   const [startNode, setStartNode] = startNodeState;
   const [endNode, setEndNode] = endNodeState;
 
@@ -75,6 +80,7 @@ export default function Body({ startNodeState, endNodeState, gridState }) {
                   onMouseUp={() => handleMouseUp()}
                   onMouseEnter={(row, col) => handleMouseEnter(row, col)}
                   onMouseOut={(row, col) => handleMouseOut(row, col)}
+                  isDark={isDark}
                 />
               );
             })}
