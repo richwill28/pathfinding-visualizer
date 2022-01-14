@@ -1,11 +1,8 @@
-import Dijkstra from "../utils/algorithms/Dijkstra";
+import dijkstra from "../utils/algorithms/dijkstra";
 
-function Header({ gridState, startNode, endNode }) {
-  const [grid, setGrid] = gridState;
-
-  const handleClick = (event) => {
-    console.log("click");
-    Dijkstra(grid, setGrid, startNode, endNode);
+export default function Header({ grid, startNode, endNode }) {
+  const handleClick = () => {
+    dijkstra(grid, startNode, endNode);
   };
 
   return (
@@ -22,5 +19,3 @@ function Header({ gridState, startNode, endNode }) {
     </div>
   );
 }
-
-export default Header;

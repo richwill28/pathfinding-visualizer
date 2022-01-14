@@ -1,6 +1,12 @@
 import Node from "./Node";
 
-function Row({ row, mouseState, generateState, startState, endState }) {
+export default function Row({
+  row,
+  mouseState,
+  generateState,
+  startState,
+  endState,
+}) {
   return (
     <div className="flex flex-row">
       {row.map((node, nodeIdx) => {
@@ -18,5 +24,3 @@ function Row({ row, mouseState, generateState, startState, endState }) {
     </div>
   );
 }
-
-export default Row;

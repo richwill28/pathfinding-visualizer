@@ -2,9 +2,9 @@ import { useEffect, useState } from "react";
 import { MAX_ROW, MAX_COL } from "../utils/constants/variable";
 import Node from "./Node";
 
-function Body({ gridState, startState, endState }) {
-  const [startNode, setStartNode] = startState;
-  const [endNode, setEndNode] = endState;
+export default function Body({ startNodeState, endNodeState, gridState }) {
+  const [startNode, setStartNode] = startNodeState;
+  const [endNode, setEndNode] = endNodeState;
 
   const [grid, setGrid] = gridState;
 
@@ -16,26 +16,65 @@ function Body({ gridState, startState, endState }) {
 
   const [generate, setGenerate] = useState("WALL");
 
-  // TODO: to be removed
-  useEffect(() => {
-    console.log(startNode);
-    console.log(endNode);
-  }, [startNode, endNode]);
+  const handleMouseDown = (row, col, isStart, isEnd) => {
+    setIsMouseDown(true);
+    if (isStart) {
+      setGenerate("START");
+    } else if (isEnd) {
+      setGenerate("END");
+    } else {
+      const newGrid = createNewGrid(grid, row, col, "WALL");
+      setGrid(newGrid);
+      setGenerate("WALL");
+    }
+  };
+
+  const handleMouseUp = () => {
+    setIsMouseDown(false);
+    setGenerate("WALL");
+  };
+
+  const handleMouseEnter = (row, col) => {
+    if (isMouseDown) {
+      const newGrid = createNewGrid(grid, row, col, generate);
+      setGrid(newGrid);
+      if (generate === "START") {
+        setStartNode({ row: row, col: col });
+      } else if (generate === "END") {
+        setEndNode({ row: row, col: col });
+      }
+    }
+  };
+
+  const handleMouseOut = (row, col) => {
+    if (generate !== "WALL") {
+      const newGrid = createNewGrid(grid, row, col, "UNVISITED");
+      setGrid(newGrid);
+    }
+  };
 
   return (
-    <div className="flex flex-col border-l border-b border-sky-500">
+    <div className="flex flex-col border-l border-b border-sky-200">
       {grid.map((row, rowIdx) => {
         return (
           <div key={rowIdx} className="flex flex-row">
             {row.map((node, nodeIdx) => {
+              const { row, col, isStart, isEnd, isVisited, isWall } = node;
               return (
                 <Node
                   key={nodeIdx}
-                  index={{ row: node.row, col: node.col }}
-                  mouseState={[isMouseDown, setIsMouseDown]}
-                  generateState={[generate, setGenerate]}
-                  startState={[startNode, setStartNode]}
-                  endState={[endNode, setEndNode]}
+                  row={row}
+                  col={col}
+                  isStart={isStart}
+                  isEnd={isEnd}
+                  isVisited={isVisited}
+                  isWall={isWall}
+                  onMouseDown={(row, col, isStart, isEnd) =>
+                    handleMouseDown(row, col, isStart, isEnd)
+                  }
+                  onMouseUp={() => handleMouseUp()}
+                  onMouseEnter={(row, col) => handleMouseEnter(row, col)}
+                  onMouseOut={(row, col) => handleMouseOut(row, col)}
                 />
               );
             })}
@@ -44,23 +83,6 @@ function Body({ gridState, startState, endState }) {
       })}
     </div>
   );
-
-  // return (
-  //   <div className="flex flex-col border-l border-b border-sky-500">
-  //     {grid.map((row, rowIdx) => {
-  //       return (
-  //         <Row
-  //           key={rowIdx}
-  //           row={row}
-  //           mouseState={[isMouseDown, setIsMouseDown]}
-  //           generateState={[generate, setGenerate]}
-  //           startState={[startNode, setStartNode]}
-  //           endState={[endNode, setEndNode]}
-  //         />
-  //       );
-  //     })}
-  //   </div>
-  // );
 }
 
 function createGrid(startNode, endNode) {
@@ -91,4 +113,21 @@ function createNode(row, col, startNode, endNode) {
   };
 }
 
-export default Body;
+function createNewGrid(grid, row, col, style) {
+  const newGrid = grid.slice(); // copy
+  const newNode = { ...newGrid[row][col] }; // copy
+  if (style === "WALL") {
+    newNode.isWall = !newGrid[row][col].isWall;
+  } else if (style === "START") {
+    newNode.isStart = true;
+    newNode.isWall = false;
+  } else if (style === "END") {
+    newNode.isEnd = true;
+    newNode.isWall = false;
+  } else if (style === "UNVISITED") {
+    newNode.isStart = false;
+    newNode.isEnd = false;
+  }
+  newGrid[row][col] = newNode;
+  return newGrid;
+}
