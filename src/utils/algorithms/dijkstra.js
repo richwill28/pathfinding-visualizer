@@ -1,6 +1,6 @@
 import { MAX_ROW, MAX_COL } from "../constants/variable";
 
-export function dijkstra(grid, startNode, endNode) {
+export default function dijkstra(grid, startNode, endNode) {
   grid[startNode.row][startNode.col].distance = 0;
   const unvisitedNodes = getNodes(grid);
   while (unvisitedNodes.length > 0) {
