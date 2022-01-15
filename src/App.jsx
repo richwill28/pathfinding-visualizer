@@ -37,7 +37,7 @@ export default function App() {
             />
           </div>
           <div className="px-40">
-            <Footer isDark={isDark} />
+            <Footer />
           </div>
         </div>
       </div>

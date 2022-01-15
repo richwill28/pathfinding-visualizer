@@ -39,16 +39,16 @@ export const EndIcon = () => {
   );
 };
 
-export const GitHubIcon = ({ isDark }) => {
+export const GitHubIcon = () => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      className="icon icon-tabler icon-tabler-brand-github"
-      width="20"
-      height="20"
+      className="icon-tabler icon-tabler-brand-github"
+      width="18"
+      height="18"
       viewBox="0 0 24 24"
       strokeWidth="2.5"
-      stroke={isDark ? "#ffffff" : "#000000"}
+      stroke="currentColor"
       fill="none"
       strokeLinecap="round"
       strokeLinejoin="round"
@@ -59,7 +59,7 @@ export const GitHubIcon = ({ isDark }) => {
   );
 };
 
-export const MoonIcon = ({ isDark }) => {
+export const MoonIcon = () => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -68,7 +68,7 @@ export const MoonIcon = ({ isDark }) => {
       height="24"
       viewBox="0 0 24 24"
       strokeWidth="2.5"
-      stroke={isDark ? "#ffffff" : "#000000"}
+      stroke="currentColor"
       fill="none"
       strokeLinecap="round"
       strokeLinejoin="round"
@@ -79,7 +79,7 @@ export const MoonIcon = ({ isDark }) => {
   );
 };
 
-export const SunIcon = ({ isDark }) => {
+export const SunIcon = () => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -88,7 +88,7 @@ export const SunIcon = ({ isDark }) => {
       height="24"
       viewBox="0 0 24 24"
       strokeWidth="2.5"
-      stroke={isDark ? "#ffffff" : "#000000"}
+      stroke="currentColor"
       fill="none"
       strokeLinecap="round"
       strokeLinejoin="round"

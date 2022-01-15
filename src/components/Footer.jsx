@@ -1,14 +1,14 @@
 import { GitHubIcon } from "./Icon";
 
-export default function Footer({ isDark }) {
+export default function Footer() {
   return (
     <div className="flex flex-row justify-between">
       <a
         href={"https://github.com/richwill28/pathfinding-visualizer"}
-        className="hover:text-sky-500 transition ease-linear flex flex-row gap-1.5"
+        className="hover:text-sky-500 transition ease-linear flex flex-row gap-1.5 items-center"
       >
-        <GitHubIcon isDark={isDark} />
-        <span className="align-middle font-mono font-bold">GitHub</span>
+        <GitHubIcon />
+        <span className="font-mono font-bold">GitHub</span>
       </a>
       <a
         href={"https://www.youtube.com/channel/UCaO6VoaYJv4kS-TQO_M-N_g"}
