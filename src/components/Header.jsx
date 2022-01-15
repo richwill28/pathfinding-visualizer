@@ -51,8 +51,8 @@ export default function Header({ grid, startNode, endNode, isDarkState }) {
           </button>
           <div className="hidden group-hover:table">
             <div className="absolute z-10 -ml-[12px] transform px-2 w-screen max-w-[215px] py-1.5">
-              <div className="rounded shadow-lg ring-1 ring-black ring-opacity-5">
-                <div className="relative grid gap-1 bg-white px-2 py-2">
+              <div className="shadow-lg ring-1 ring-black dark:rink-white ring-opacity-5">
+                <div className="relative grid gap-1 bg-white px-2 py-2 rounded dark:bg-slate-900">
                   <button
                     className="rounded text-[15px] text-left font-mono font-bold border-2 border-transparent hover:border-sky-400 p-1.5"
                     onClick={() => handleAlgoChoice("BFS")}
