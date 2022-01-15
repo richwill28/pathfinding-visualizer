@@ -4,7 +4,7 @@ import { MAX_ROW, MAX_COL } from "../constants/variable";
 export default function dijkstra(grid, startNode, endNode) {
   const visitedNodes = [];
 
-  // Dijkstra's routine
+  // Dijkstra main routine
   grid[startNode.row][startNode.col].distance = 0;
   const unvisitedNodes = getNodes(grid);
   while (unvisitedNodes.length > 0) {
