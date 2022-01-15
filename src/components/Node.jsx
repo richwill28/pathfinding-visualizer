@@ -5,6 +5,7 @@ import {
   STYLE_WALL_DARK,
   STYLE_UNVISITED,
   STYLE_VISITED,
+  STYLE_PATH,
 } from "../utils/constants/style";
 
 export default function Node({
@@ -14,6 +15,7 @@ export default function Node({
   isEnd,
   isVisited,
   isWall,
+  isPath,
   onMouseDown,
   onMouseUp,
   onMouseEnter,
@@ -28,6 +30,8 @@ export default function Node({
     ? STYLE_WALL_LIGHT
     : isWall && !isDark
     ? STYLE_WALL_DARK
+    : isPath
+    ? STYLE_PATH
     : isVisited
     ? STYLE_VISITED
     : STYLE_UNVISITED;

@@ -1,21 +1,8 @@
-import { useEffect, useState } from "react";
-import { MAX_ROW, MAX_COL } from "../utils/constants/variable";
+import { useState } from "react";
 import Node from "./Node";
 
-export default function Body({
-  startNodeState,
-  endNodeState,
-  gridState,
-  isDark,
-}) {
-  const [startNode, setStartNode] = startNodeState;
-  const [endNode, setEndNode] = endNodeState;
-
+export default function Body({ setStartNode, setEndNode, gridState, isDark }) {
   const [grid, setGrid] = gridState;
-
-  useEffect(() => {
-    setGrid(createGrid(startNode, endNode));
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const [isMouseDown, setIsMouseDown] = useState(false);
 
@@ -44,9 +31,9 @@ export default function Body({
       const newGrid = createNewGrid(grid, row, col, generate);
       setGrid(newGrid);
       if (generate === "START") {
-        setStartNode({ row: row, col: col });
+        setStartNode({ row, col });
       } else if (generate === "END") {
-        setEndNode({ row: row, col: col });
+        setEndNode({ row, col });
       }
     }
   };
@@ -59,12 +46,13 @@ export default function Body({
   };
 
   return (
-    <div className="flex flex-col border-l border-b border-sky-200">
+    <div className="flex flex-col w-[1000px] border-l border-b border-sky-200">
       {grid.map((row, rowIdx) => {
         return (
           <div key={rowIdx} className="flex flex-row">
             {row.map((node, nodeIdx) => {
-              const { row, col, isStart, isEnd, isVisited, isWall } = node;
+              const { row, col, isStart, isEnd, isVisited, isWall, isPath } =
+                node;
               return (
                 <Node
                   key={nodeIdx}
@@ -74,6 +62,7 @@ export default function Body({
                   isEnd={isEnd}
                   isVisited={isVisited}
                   isWall={isWall}
+                  isPath={isPath}
                   onMouseDown={(row, col, isStart, isEnd) =>
                     handleMouseDown(row, col, isStart, isEnd)
                   }
@@ -91,50 +80,35 @@ export default function Body({
   );
 }
 
-function createGrid(startNode, endNode) {
-  const grid = [];
-  for (let i = 0; i < MAX_ROW; i++) {
-    grid.push(createRow(i, startNode, endNode));
-  }
-  return grid;
-}
-
-function createRow(index, startNode, endNode) {
-  const row = [];
-  for (let i = 0; i < MAX_COL; i++) {
-    row.push(createNode(index, i, startNode, endNode));
-  }
-  return row;
-}
-
-function createNode(row, col, startNode, endNode) {
-  return {
-    row: row,
-    col: col,
-    distance: Infinity,
-    isStart: row === startNode.row && col === startNode.col,
-    isEnd: row === endNode.row && col === endNode.col,
-    isVisited: false,
-    isWall: false,
-    parent: null,
-  };
-}
-
+// TODO: improve this
 function createNewGrid(grid, row, col, style) {
   const newGrid = grid.slice(); // copy
-  const newNode = { ...newGrid[row][col] }; // copy
+  for (const row of newGrid) {
+    for (const node of row) {
+      node.isVisited = false;
+      node.isPath = false;
+    }
+  }
+
+  const newNode = {
+    ...newGrid[row][col],
+    isStart: false,
+    isEnd: false,
+    isVisited: false,
+    isWall: false,
+    isPath: false,
+  };
+
   if (style === "WALL") {
     newNode.isWall = !newGrid[row][col].isWall;
   } else if (style === "START") {
     newNode.isStart = true;
-    newNode.isWall = false;
   } else if (style === "END") {
     newNode.isEnd = true;
-    newNode.isWall = false;
   } else if (style === "UNVISITED") {
-    newNode.isStart = false;
-    newNode.isEnd = false;
+    newNode.isVisited = false;
   }
+
   newGrid[row][col] = newNode;
   return newGrid;
 }

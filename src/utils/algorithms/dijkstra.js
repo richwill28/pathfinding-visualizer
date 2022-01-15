@@ -26,6 +26,7 @@ export default function dijkstra(grid, startNode, endNode) {
   const shortestPath = [];
   let node = grid[endNode.row][endNode.col];
   while (node !== null) {
+    node.isPath = true;
     shortestPath.unshift(node);
     node = node.parent;
   }

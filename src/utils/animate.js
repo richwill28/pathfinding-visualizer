@@ -6,7 +6,7 @@ export default function animate(visitedNodes, shortestPath) {
     setTimeout(() => {
       const node = visitedNodes[i];
       document.getElementById(`${node.row}-${node.col}`).className =
-        STYLE_VISITED;
+        STYLE_VISITED + " animate-visited";
     }, DELAY_VISIT * i);
   }
 
@@ -15,7 +15,7 @@ export default function animate(visitedNodes, shortestPath) {
       setTimeout(() => {
         const node = shortestPath[i];
         document.getElementById(`${node.row}-${node.col}`).className =
-          STYLE_PATH;
+          STYLE_PATH + " animate-path";
       }, DELAY_PATH * i);
     }
   }, DELAY_VISIT * (visitedNodes.length - 2));

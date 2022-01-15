@@ -4,7 +4,8 @@ import animate from "../utils/animate";
 import { SunIcon, MoonIcon } from "./Icon";
 
 export default function Header({ grid, startNode, endNode, isDarkState }) {
-  const visualize = () => {
+  const handleVisualization = () => {
+    console.log(startNode);
     const { visitedNodes, shortestPath } = dijkstra(grid, startNode, endNode);
     animate(visitedNodes, shortestPath);
   };
@@ -37,7 +38,7 @@ export default function Header({ grid, startNode, endNode, isDarkState }) {
       <div className="flex flex-row items-center gap-6">
         <button
           className="bg-sky-400 hover:bg-sky-500 text-[15px] font-mono font-bold rounded px-2.5 py-1 shadow-md shadow-sky-900/50 active:shadow-sky-900/30 dark:shadow-sky-400/50 dark:active:shadow-sky-400/30"
-          onClick={visualize}
+          onClick={handleVisualization}
         >
           VISUALIZE
         </button>

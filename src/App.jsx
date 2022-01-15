@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { MAX_ROW, MAX_COL } from "./utils/constants/variable";
 import Header from "./components/Header";
 import Body from "./components/Body";
 import Footer from "./components/Footer";
@@ -10,10 +11,10 @@ export default function App() {
   const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
   const [isDark, setIsDark] = useState(prefersDark);
 
-  const [grid, setGrid] = useState([]);
-
   const [startNode, setStartNode] = useState(INITIAL_START);
   const [endNode, setEndNode] = useState(INITIAL_END);
+
+  const [grid, setGrid] = useState(createGrid(startNode, endNode));
 
   return (
     <div className={isDark ? "dark" : ""}>
@@ -29,8 +30,8 @@ export default function App() {
           </div>
           <div className="min-h-[600px] px-40">
             <Body
-              startNodeState={[startNode, setStartNode]}
-              endNodeState={[endNode, setEndNode]}
+              setStartNode={setStartNode}
+              setEndNode={setEndNode}
               gridState={[grid, setGrid]}
               isDark={isDark}
             />
@@ -42,4 +43,34 @@ export default function App() {
       </div>
     </div>
   );
+}
+
+function createGrid(startNode, endNode) {
+  const grid = [];
+  for (let i = 0; i < MAX_ROW; i++) {
+    grid.push(createRow(i, startNode, endNode));
+  }
+  return grid;
+}
+
+function createRow(index, startNode, endNode) {
+  const row = [];
+  for (let i = 0; i < MAX_COL; i++) {
+    row.push(createNode(index, i, startNode, endNode));
+  }
+  return row;
+}
+
+function createNode(row, col, startNode, endNode) {
+  return {
+    row: row,
+    col: col,
+    distance: Infinity,
+    isStart: row === startNode.row && col === startNode.col,
+    isEnd: row === endNode.row && col === endNode.col,
+    isVisited: false,
+    isWall: false,
+    isPath: false,
+    parent: null,
+  };
 }
