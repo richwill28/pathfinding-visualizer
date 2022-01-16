@@ -1,6 +1,7 @@
 import { MAX_ROW, MAX_COL } from "../../constants/variable";
 
-export default function dfs(grid, startNode, endNode) {
+// non-optimized implementation without using proper stack data structure
+export default function bfs(grid, startNode, endNode) {
   const visitedNodes = [];
 
   // DFS main routine
@@ -13,11 +14,24 @@ export default function dfs(grid, startNode, endNode) {
     node.isVisited = true;
     visitedNodes.push(node);
     if (node.row === endNode.row && node.col === endNode.col) break; // finish
+
+    // traverse neighbors
     const neighbors = getUnvisitedNeighbors(grid, node);
     for (const neighbor of neighbors) {
-      neighbor.distance = node.distance + 1;
-      neighbor.parent = node;
-      unvisitedNodes.push(neighbor);
+      let isSkip = false; // prevent pushing the same node into the stack more than once
+      for (const unvisitedNode of unvisitedNodes) {
+        if (
+          neighbor.row === unvisitedNode.row &&
+          neighbor.col === unvisitedNode.col
+        ) {
+          isSkip = true;
+        }
+      }
+      if (!isSkip) {
+        neighbor.distance = node.distance + 1;
+        neighbor.parent = node;
+        unvisitedNodes.push(neighbor);
+      }
     }
   }
 
@@ -36,9 +50,9 @@ export default function dfs(grid, startNode, endNode) {
 function getUnvisitedNeighbors(grid, node) {
   const { row, col } = node;
   const neighbors = [];
-  if (row > 0) neighbors.push(grid[row - 1][col]);
-  if (row < MAX_ROW - 1) neighbors.push(grid[row + 1][col]);
-  if (col > 0) neighbors.push(grid[row][col - 1]);
-  if (col < MAX_COL - 1) neighbors.push(grid[row][col + 1]);
+  if (col > 0) neighbors.push(grid[row][col - 1]); // left
+  if (row > 0) neighbors.push(grid[row - 1][col]); // top
+  if (col < MAX_COL - 1) neighbors.push(grid[row][col + 1]); // right
+  if (row < MAX_ROW - 1) neighbors.push(grid[row + 1][col]); // bottom
   return neighbors.filter((neighbor) => !neighbor.isVisited);
 }
