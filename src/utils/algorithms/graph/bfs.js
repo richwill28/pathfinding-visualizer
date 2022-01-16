@@ -1,13 +1,13 @@
-import { MAX_ROW, MAX_COL } from "../constants/variable";
+import { MAX_ROW, MAX_COL } from "../../constants/variable";
 
-export default function dfs(grid, startNode, endNode) {
+export default function bfs(grid, startNode, endNode) {
   const visitedNodes = [];
 
-  // DFS main routine
+  // BFS main routine
   grid[startNode.row][startNode.col].distance = 0;
   const unvisitedNodes = [grid[startNode.row][startNode.col]];
   while (unvisitedNodes.length > 0) {
-    const node = unvisitedNodes.pop();
+    const node = unvisitedNodes.shift();
     if (node.isWall) continue; // skip wall
     if (node.distance === Infinity) break; // trapped
     node.isVisited = true;

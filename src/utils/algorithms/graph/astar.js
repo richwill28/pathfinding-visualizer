@@ -1,4 +1,4 @@
-import { MAX_ROW, MAX_COL } from "../constants/variable";
+import { MAX_ROW, MAX_COL } from "../../constants/variable";
 
 export default function astar(grid, startNode, endNode) {
   const visitedNodes = [];

@@ -1,15 +1,13 @@
-import { MAX_ROW, MAX_COL } from "../constants/variable";
+import { MAX_ROW, MAX_COL } from "../../constants/variable";
 
-// Inefficient implementation without using priority queue
-export default function dijkstra(grid, startNode, endNode) {
+export default function dfs(grid, startNode, endNode) {
   const visitedNodes = [];
 
-  // Dijkstra main routine
+  // DFS main routine
   grid[startNode.row][startNode.col].distance = 0;
-  const unvisitedNodes = getNodes(grid);
+  const unvisitedNodes = [grid[startNode.row][startNode.col]];
   while (unvisitedNodes.length > 0) {
-    unvisitedNodes.sort((a, b) => a.distance - b.distance);
-    const node = unvisitedNodes.shift();
+    const node = unvisitedNodes.pop();
     if (node.isWall) continue; // skip wall
     if (node.distance === Infinity) break; // trapped
     node.isVisited = true;
@@ -19,6 +17,7 @@ export default function dijkstra(grid, startNode, endNode) {
     for (const neighbor of neighbors) {
       neighbor.distance = node.distance + 1;
       neighbor.parent = node;
+      unvisitedNodes.push(neighbor);
     }
   }
 
@@ -32,16 +31,6 @@ export default function dijkstra(grid, startNode, endNode) {
   }
 
   return { visitedNodes, shortestPath };
-}
-
-function getNodes(grid) {
-  const nodes = [];
-  for (const row of grid) {
-    for (const node of row) {
-      nodes.push(node);
-    }
-  }
-  return nodes;
 }
 
 function getUnvisitedNeighbors(grid, node) {
