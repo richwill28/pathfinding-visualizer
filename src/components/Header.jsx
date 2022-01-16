@@ -28,7 +28,7 @@ export default function Header({ grid, startNode, endNode, isDarkState }) {
       startNode,
       endNode
     );
-    // animatePath(visitedNodes, shortestPath);
+    animatePath(visitedNodes, shortestPath);
   };
 
   const handleMazeGeneration = () => {
