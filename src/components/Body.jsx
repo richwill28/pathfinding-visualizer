@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { MAX_COL } from "../utils/constants/max";
 import Node from "./Node";
 
 export default function Body({ setStartNode, setEndNode, gridState, isDark }) {
@@ -46,7 +47,11 @@ export default function Body({ setStartNode, setEndNode, gridState, isDark }) {
   };
 
   return (
-    <div className="flex flex-col w-[1000px] border-l border-b border-sky-200">
+    <div
+      className={`flex flex-col border-l border-b border-sky-200 w-[${
+        MAX_COL * 20
+      }px]`}
+    >
       {grid.map((row, rowIdx) => {
         return (
           <div key={rowIdx} className="flex flex-row">

@@ -1,11 +1,11 @@
 import { useState } from "react";
-import { MAX_ROW, MAX_COL } from "./utils/constants/variable";
+import { MAX_ROW, MAX_COL } from "./utils/constants/max";
 import Header from "./components/Header";
 import Body from "./components/Body";
 import Footer from "./components/Footer";
 
-const INITIAL_START = { row: 9, col: 9 };
-const INITIAL_END = { row: 29, col: 39 };
+const INITIAL_START = { row: 1, col: 1 };
+const INITIAL_END = { row: MAX_ROW - 2, col: MAX_COL - 2 };
 
 export default function App() {
   const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
@@ -28,7 +28,7 @@ export default function App() {
               isDarkState={[isDark, setIsDark]}
             />
           </div>
-          <div className="min-h-[600px] px-40">
+          <div className={`px-40 min-h-[${MAX_ROW * 20}px]`}>
             <Body
               setStartNode={setStartNode}
               setEndNode={setEndNode}

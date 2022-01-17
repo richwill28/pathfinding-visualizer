@@ -1,4 +1,4 @@
-import { MAX_ROW, MAX_COL } from "../../constants/variable";
+import { MAX_ROW, MAX_COL } from "../../constants/max";
 
 // non-optimized implementation without using proper stack data structure
 export default function bfs(grid, startNode, endNode) {

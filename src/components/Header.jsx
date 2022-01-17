@@ -6,7 +6,7 @@ import astar from "../utils/algorithms/graph/astar";
 import recursiveDivision from "../utils/algorithms/maze/recursiveDivision";
 import { animatePath, animateWall } from "../utils/animation";
 import { SunIcon, MoonIcon } from "./Icon";
-import { DELAY_VISIT } from "../utils/constants/delay";
+import { MAX_ROW, MAX_COL } from "../utils/constants/max";
 
 export default function Header({ grid, startNode, endNode, isDarkState }) {
   const [algorithm, setAlgorithm] = useState("DIJKSTRA");
@@ -32,9 +32,9 @@ export default function Header({ grid, startNode, endNode, isDarkState }) {
   };
 
   const handleMazeGeneration = () => {
-    const walls = runMazeAlgorithm(maze, grid, startNode, endNode);
+    const walls = [];
+    runMazeAlgorithm(maze, grid, walls, startNode, endNode);
     animateWall(walls);
-    setTimeout(() => {}, DELAY_VISIT * (walls.length + 1));
   };
 
   const [isDark, setIsDark] = isDarkState;
@@ -144,8 +144,44 @@ function runGraphAlgorithm(algorithm, grid, startNode, endNode) {
   }
 }
 
-function runMazeAlgorithm(maze, grid, startNode, endNode) {
+function runMazeAlgorithm(maze, grid, walls, startNode, endNode) {
   if (maze === "RECURSIVE DIVISION") {
-    return recursiveDivision(grid, startNode, endNode);
+    generateBorder(grid, walls);
+    recursiveDivision(
+      grid,
+      startNode,
+      endNode,
+      walls,
+      1,
+      1,
+      (MAX_ROW - 2 + 1) / 2,
+      (MAX_COL - 2 + 1) / 2
+    );
+  }
+}
+
+function generateBorder(grid, walls) {
+  // top
+  for (let i = 0; i < MAX_COL; i++) {
+    grid[0][i].isWall = true;
+    walls.push(grid[0][i]);
+  }
+
+  // right
+  for (let i = 1; i < MAX_ROW; i++) {
+    grid[i][MAX_COL - 1].isWall = true;
+    walls.push(grid[i][MAX_COL - 1]);
+  }
+
+  // bottom
+  for (let i = MAX_COL - 2; i >= 0; i--) {
+    grid[MAX_ROW - 1][i].isWall = true;
+    walls.push(grid[MAX_ROW - 1][i]);
+  }
+
+  // left
+  for (let i = MAX_ROW - 2; i >= 1; i--) {
+    grid[i][0].isWall = true;
+    walls.push(grid[i][0]);
   }
 }

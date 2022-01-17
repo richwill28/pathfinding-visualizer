@@ -1,5 +1,5 @@
 import { STYLE_VISITED, STYLE_PATH, STYLE_WALL_DARK } from "./constants/style";
-import { DELAY_VISIT, DELAY_PATH } from "./constants/delay";
+import { DELAY_VISIT, DELAY_PATH, DELAY_WALL } from "./constants/delay";
 
 export function animatePath(visitedNodes, shortestPath) {
   for (let i = 1; i < visitedNodes.length - 1; i++) {
@@ -26,7 +26,7 @@ export function animateWall(walls) {
     setTimeout(() => {
       const node = walls[i];
       document.getElementById(`${node.row}-${node.col}`).className =
-        STYLE_WALL_DARK;
-    }, DELAY_VISIT * i);
+        STYLE_WALL_DARK; // TODO: implement dark mode here
+    }, DELAY_WALL * i);
   }
 }
