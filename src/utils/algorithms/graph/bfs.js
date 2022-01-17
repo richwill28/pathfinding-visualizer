@@ -4,34 +4,26 @@ import { MAX_ROW, MAX_COL } from "../../constants/variable";
 export default function bfs(grid, startNode, endNode) {
   const visitedNodes = [];
 
+  const root = grid[startNode.row][startNode.col];
+  root.distance = 0;
+  root.isVisited = true;
+
   // BFS main routine
-  grid[startNode.row][startNode.col].distance = 0;
-  const unvisitedNodes = [grid[startNode.row][startNode.col]];
+  const unvisitedNodes = [root];
   while (unvisitedNodes.length > 0) {
     const node = unvisitedNodes.shift();
     if (node.isWall) continue; // skip wall
     if (node.distance === Infinity) break; // trapped
-    node.isVisited = true;
     visitedNodes.push(node);
     if (node.row === endNode.row && node.col === endNode.col) break; // finish
 
     // traverse neighbors
     const neighbors = getUnvisitedNeighbors(grid, node);
     for (const neighbor of neighbors) {
-      let isSkip = false; // prevent pushing the same node into the queue more than once
-      for (const unvisitedNode of unvisitedNodes) {
-        if (
-          neighbor.row === unvisitedNode.row &&
-          neighbor.col === unvisitedNode.col
-        ) {
-          isSkip = true;
-        }
-      }
-      if (!isSkip) {
-        neighbor.distance = node.distance + 1;
-        neighbor.parent = node;
-        unvisitedNodes.push(neighbor);
-      }
+      neighbor.distance = node.distance + 1;
+      neighbor.isVisited = true;
+      neighbor.parent = node;
+      unvisitedNodes.push(neighbor);
     }
   }
 
