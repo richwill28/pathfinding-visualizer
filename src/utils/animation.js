@@ -26,7 +26,7 @@ export function animateWall(walls) {
     setTimeout(() => {
       const node = walls[i];
       document.getElementById(`${node.row}-${node.col}`).className =
-        STYLE_WALL_DARK; // TODO: implement dark mode here
+        STYLE_WALL_DARK + " animate-wall"; // TODO: implement dark mode here
     }, DELAY_WALL * i);
   }
 }

@@ -45,7 +45,7 @@ export default function App() {
   );
 }
 
-function createGrid(startNode, endNode) {
+export function createGrid(startNode, endNode) {
   const grid = [];
   for (let i = 0; i < MAX_ROW; i++) {
     grid.push(createRow(i, startNode, endNode));

@@ -5,8 +5,8 @@ import dijkstra from "../utils/algorithms/graph/dijkstra";
 import astar from "../utils/algorithms/graph/astar";
 import recursiveDivision from "../utils/algorithms/maze/recursiveDivision";
 import { animatePath, animateWall } from "../utils/animation";
-import { SunIcon, MoonIcon } from "./Icon";
 import { MAX_ROW, MAX_COL } from "../utils/constants/max";
+import { SunIcon, MoonIcon } from "./Icon";
 
 export default function Header({ grid, startNode, endNode, isDarkState }) {
   const [algorithm, setAlgorithm] = useState("DIJKSTRA");
