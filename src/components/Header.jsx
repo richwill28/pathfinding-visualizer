@@ -6,9 +6,12 @@ import astar from "../utils/algorithms/graph/astar";
 import recursiveDivision from "../utils/algorithms/maze/recursiveDivision";
 import { animatePath, animateWall } from "../utils/animation";
 import { MAX_ROW, MAX_COL } from "../utils/constants/max";
+import { DELAY_PATH, DELAY_VISIT, DELAY_WALL } from "../utils/constants/delay";
 import { SunIcon, MoonIcon } from "./Icon";
 
-export default function Header({ grid, startNode, endNode, isDarkState }) {
+export default function Header({ gridState, startNode, endNode, isDarkState }) {
+  const [grid, setGrid] = gridState;
+
   const [algorithm, setAlgorithm] = useState("DIJKSTRA");
 
   const handleAlgoChoice = (algo) => {
@@ -28,13 +31,25 @@ export default function Header({ grid, startNode, endNode, isDarkState }) {
       startNode,
       endNode
     );
+    const newGrid = grid.slice();
     animatePath(visitedNodes, shortestPath);
+
+    // rerender grid
+    setTimeout(() => {
+      setGrid(newGrid);
+    }, DELAY_VISIT * visitedNodes.length + DELAY_PATH * (shortestPath.length + 40)); // not arbitrary value
   };
 
   const handleMazeGeneration = () => {
     const walls = [];
     runMazeAlgorithm(maze, grid, walls, startNode, endNode);
     animateWall(walls);
+
+    // rerender grid
+    setTimeout(() => {
+      const newGrid = grid.slice();
+      setGrid(newGrid);
+    }, DELAY_WALL * (walls.length + 100)); // not arbitrary value
   };
 
   const [isDark, setIsDark] = isDarkState;

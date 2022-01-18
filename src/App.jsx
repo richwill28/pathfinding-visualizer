@@ -22,7 +22,7 @@ export default function App() {
         <div className="flex flex-col w-full gap-y-[15px]">
           <div className="min-h-[60px] px-40 border-b shadow-md dark:shadow-gray-600">
             <Header
-              grid={grid}
+              gridState={[grid, setGrid]}
               startNode={startNode}
               endNode={endNode}
               isDarkState={[isDark, setIsDark]}

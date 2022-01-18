@@ -15,16 +15,18 @@ export default function bfs(grid, startNode, endNode) {
     const node = unvisitedNodes.shift();
     if (node.isWall) continue; // skip wall
     if (node.distance === Infinity) break; // trapped
+    node.isVisited = true;
     visitedNodes.push(node);
     if (node.row === endNode.row && node.col === endNode.col) break; // finish
 
     // traverse neighbors
     const neighbors = getUnvisitedNeighbors(grid, node);
     for (const neighbor of neighbors) {
-      neighbor.distance = node.distance + 1;
-      neighbor.isVisited = true;
-      neighbor.parent = node;
-      unvisitedNodes.push(neighbor);
+      if (!isInQueue(neighbor, unvisitedNodes)) {
+        neighbor.distance = node.distance + 1;
+        neighbor.parent = node;
+        unvisitedNodes.push(neighbor);
+      }
     }
   }
 
@@ -48,4 +50,13 @@ function getUnvisitedNeighbors(grid, node) {
   if (col < MAX_COL - 1) neighbors.push(grid[row][col + 1]); // right
   if (row < MAX_ROW - 1) neighbors.push(grid[row + 1][col]); // bottom
   return neighbors.filter((neighbor) => !neighbor.isVisited);
+}
+
+function isInQueue(node, queue) {
+  for (const element of queue) {
+    if (node.row === element.row && node.col === element.col) {
+      return true;
+    }
+  }
+  return false;
 }
