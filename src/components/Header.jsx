@@ -9,22 +9,36 @@ import { MAX_ROW, MAX_COL } from "../utils/constants/max";
 import { DELAY_PATH, DELAY_VISIT, DELAY_WALL } from "../utils/constants/delay";
 import { SunIcon, MoonIcon } from "./Icon";
 
-export default function Header({ gridState, startNode, endNode, isDarkState }) {
+export default function Header({
+  gridState,
+  startNode,
+  endNode,
+  algorithmState,
+  mazeState,
+  isGraphVisualizedState,
+  isDarkState,
+}) {
   const [grid, setGrid] = gridState;
 
-  const [algorithm, setAlgorithm] = useState("DIJKSTRA");
+  const [isGraphVisualized, setIsGraphVisualized] = isGraphVisualizedState;
+
+  const [algorithm, setAlgorithm] = algorithmState;
 
   const handleAlgoChoice = (algo) => {
     setAlgorithm(algo);
   };
 
-  const [maze, setMaze] = useState("RECURSIVE DIVISION");
+  const [maze, setMaze] = mazeState;
 
   const handleMazeChoice = (maze) => {
     setMaze(maze);
   };
 
   const handleGraphVisualization = () => {
+    // if (isGraphVisualized) {
+    //   refreshGrid(grid);
+    // }
+
     const { visitedNodes, shortestPath } = runGraphAlgorithm(
       algorithm,
       grid,
@@ -34,9 +48,10 @@ export default function Header({ gridState, startNode, endNode, isDarkState }) {
     const newGrid = grid.slice();
     animatePath(visitedNodes, shortestPath);
 
-    // rerender grid
+    // re-render grid
     setTimeout(() => {
       setGrid(newGrid);
+      setIsGraphVisualized(true);
     }, DELAY_VISIT * visitedNodes.length + DELAY_PATH * (shortestPath.length + 40)); // not arbitrary value
   };
 
@@ -45,7 +60,7 @@ export default function Header({ gridState, startNode, endNode, isDarkState }) {
     runMazeAlgorithm(maze, grid, walls, startNode, endNode);
     animateWall(walls);
 
-    // rerender grid
+    // re-render grid
     setTimeout(() => {
       const newGrid = grid.slice();
       setGrid(newGrid);
@@ -147,7 +162,7 @@ export default function Header({ gridState, startNode, endNode, isDarkState }) {
   );
 }
 
-function runGraphAlgorithm(algorithm, grid, startNode, endNode) {
+export function runGraphAlgorithm(algorithm, grid, startNode, endNode) {
   if (algorithm === "BFS") {
     return bfs(grid, startNode, endNode);
   } else if (algorithm === "DFS") {
@@ -198,5 +213,30 @@ function generateBorder(grid, walls) {
   for (let i = MAX_ROW - 2; i >= 1; i--) {
     grid[i][0].isWall = true;
     walls.push(grid[i][0]);
+  }
+}
+
+// preserve walls
+export function refreshGrid(grid) {
+  for (const row of grid) {
+    for (const node of row) {
+      node.distance = Infinity;
+      node.isVisited = false;
+      node.isPath = false;
+      node.parent = null;
+    }
+  }
+}
+
+// does not preserve walls
+export function cleanGrid(grid) {
+  for (const row of grid) {
+    for (const node of row) {
+      node.distance = Infinity;
+      node.isVisited = false;
+      node.isWall = false;
+      node.isPath = false;
+      node.parent = null;
+    }
   }
 }

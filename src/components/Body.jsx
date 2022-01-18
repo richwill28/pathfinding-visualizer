@@ -1,8 +1,19 @@
 import { useState } from "react";
 import { MAX_COL } from "../utils/constants/max";
+import { runGraphAlgorithm, refreshGrid } from "./Header";
 import Node from "./Node";
 
-export default function Body({ setStartNode, setEndNode, gridState, isDark }) {
+export default function Body({
+  startNodeState,
+  endNodeState,
+  gridState,
+  algorithm,
+  isGraphVisualized,
+  isDark,
+}) {
+  const [startNode, setStartNode] = startNodeState;
+  const [endNode, setEndNode] = endNodeState;
+
   const [grid, setGrid] = gridState;
 
   const [isMouseDown, setIsMouseDown] = useState(false);
@@ -16,32 +27,76 @@ export default function Body({ setStartNode, setEndNode, gridState, isDark }) {
     } else if (isEnd) {
       setGenerate("END");
     } else {
-      const newGrid = createNewGrid(grid, row, col, "WALL");
+      const newGrid = createNewGrid(grid, row, col, "WALL", isGraphVisualized);
       setGrid(newGrid);
       setGenerate("WALL");
     }
   };
 
-  const handleMouseUp = () => {
+  const handleMouseUp = (row, col) => {
+    if (generate !== "WALL") {
+      if (!isGraphVisualized) {
+        const newGrid = createNewGrid(
+          grid,
+          row,
+          col,
+          generate,
+          isGraphVisualized
+        );
+
+        if (generate === "START") {
+          const newStartNode = { row, col };
+          setStartNode(newStartNode);
+        } else if (generate === "END") {
+          const newEndNode = { row, col };
+          setEndNode(newEndNode);
+        }
+
+        setGrid(newGrid);
+      }
+    }
+
     setIsMouseDown(false);
     setGenerate("WALL");
   };
 
   const handleMouseEnter = (row, col) => {
     if (isMouseDown) {
-      const newGrid = createNewGrid(grid, row, col, generate);
-      setGrid(newGrid);
-      if (generate === "START") {
-        setStartNode({ row, col });
-      } else if (generate === "END") {
-        setEndNode({ row, col });
+      const newGrid = createNewGrid(
+        grid,
+        row,
+        col,
+        generate,
+        isGraphVisualized
+      );
+
+      if (isGraphVisualized) {
+        if (generate === "START") {
+          const newStartNode = { row, col };
+          setStartNode(newStartNode);
+          // re-evaluate graph algorithm (not efficient?)
+          runGraphAlgorithm(algorithm, newGrid, newStartNode, endNode);
+        } else if (generate === "END") {
+          const newEndNode = { row, col };
+          setEndNode(newEndNode);
+          // re-evaluate graph algorithm (not efficient?)
+          runGraphAlgorithm(algorithm, newGrid, startNode, newEndNode);
+        }
       }
+
+      setGrid(newGrid);
     }
   };
 
   const handleMouseOut = (row, col) => {
     if (generate !== "WALL") {
-      const newGrid = createNewGrid(grid, row, col, "UNVISITED");
+      const newGrid = createNewGrid(
+        grid,
+        row,
+        col,
+        "UNVISITED",
+        isGraphVisualized
+      );
       setGrid(newGrid);
     }
   };
@@ -71,7 +126,7 @@ export default function Body({ setStartNode, setEndNode, gridState, isDark }) {
                   onMouseDown={(row, col, isStart, isEnd) =>
                     handleMouseDown(row, col, isStart, isEnd)
                   }
-                  onMouseUp={() => handleMouseUp()}
+                  onMouseUp={(row, col) => handleMouseUp(row, col)}
                   onMouseEnter={(row, col) => handleMouseEnter(row, col)}
                   onMouseOut={(row, col) => handleMouseOut(row, col)}
                   isDark={isDark}
@@ -85,15 +140,8 @@ export default function Body({ setStartNode, setEndNode, gridState, isDark }) {
   );
 }
 
-// TODO: improve this
-function createNewGrid(grid, row, col, style) {
+function createNewGrid(grid, row, col, generate, isGraphVisualized) {
   const newGrid = grid.slice(); // copy
-  for (const row of newGrid) {
-    for (const node of row) {
-      node.isVisited = false;
-      node.isPath = false;
-    }
-  }
 
   const newNode = {
     ...newGrid[row][col],
@@ -104,13 +152,19 @@ function createNewGrid(grid, row, col, style) {
     isPath: false,
   };
 
-  if (style === "WALL") {
+  if (generate === "WALL") {
     newNode.isWall = !newGrid[row][col].isWall;
-  } else if (style === "START") {
+  } else if (generate === "START") {
+    if (isGraphVisualized) {
+      refreshGrid(newGrid);
+    }
     newNode.isStart = true;
-  } else if (style === "END") {
+  } else if (generate === "END") {
+    if (isGraphVisualized) {
+      refreshGrid(newGrid);
+    }
     newNode.isEnd = true;
-  } else if (style === "UNVISITED") {
+  } else if (generate === "UNVISITED") {
     newNode.isVisited = false;
   }
 

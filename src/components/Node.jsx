@@ -41,7 +41,7 @@ export default function Node({
       id={`${row}-${col}`}
       className={style}
       onMouseDown={() => onMouseDown(row, col, isStart, isEnd)}
-      onMouseUp={() => onMouseUp()}
+      onMouseUp={() => onMouseUp(row, col)}
       onMouseEnter={() => onMouseEnter(row, col)}
       onMouseOut={() => onMouseOut(row, col)}
     ></div>

@@ -16,6 +16,11 @@ export default function App() {
 
   const [grid, setGrid] = useState(createGrid(startNode, endNode));
 
+  const [algorithm, setAlgorithm] = useState("DIJKSTRA");
+  const [maze, setMaze] = useState("RECURSIVE DIVISION");
+
+  const [isGraphVisualized, setIsGraphVisualized] = useState(false);
+
   return (
     <div className={isDark ? "dark" : ""}>
       <div className="transition duration-700 bg-white dark:bg-slate-900 text-gray-900 dark:text-white grid grid-cols-1 justify-items-center min-h-screen">
@@ -25,14 +30,19 @@ export default function App() {
               gridState={[grid, setGrid]}
               startNode={startNode}
               endNode={endNode}
+              algorithmState={[algorithm, setAlgorithm]}
+              mazeState={[maze, setMaze]}
+              isGraphVisualizedState={[isGraphVisualized, setIsGraphVisualized]}
               isDarkState={[isDark, setIsDark]}
             />
           </div>
           <div className={`px-40 min-h-[${MAX_ROW * 20}px]`}>
             <Body
-              setStartNode={setStartNode}
-              setEndNode={setEndNode}
+              startNodeState={[startNode, setStartNode]}
+              endNodeState={[endNode, setEndNode]}
               gridState={[grid, setGrid]}
+              algorithm={algorithm}
+              isGraphVisualized={isGraphVisualized}
               isDark={isDark}
             />
           </div>
