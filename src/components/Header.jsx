@@ -5,6 +5,7 @@ import dijkstra from "../utils/algorithms/graph/dijkstra";
 import astar from "../utils/algorithms/graph/astar";
 import binaryTree from "../utils/algorithms/maze/binaryTree";
 import recursiveDivision from "../utils/algorithms/maze/recursiveDivision";
+import huntAndKill from "../utils/algorithms/maze/huntAndKill";
 import isEqual from "../utils/isEqual";
 import { animatePath, animateWall } from "../utils/animation";
 import { MAX_ROW, MAX_COL } from "../utils/constants/max";
@@ -124,6 +125,12 @@ export default function Header({
                   >
                     RECURSIVE DIVISION
                   </button>
+                  <button
+                    className="rounded text-[15px] text-left font-mono font-bold border-2 border-transparent hover:border-sky-400 p-1.5"
+                    onClick={() => handleMazeChoice("HUNT-AND-KILL")}
+                  >
+                    HUNT-AND-KILL
+                  </button>
                 </div>
               </div>
             </div>
@@ -207,6 +214,8 @@ function runMazeAlgorithm(maze, grid, walls, startNode, endNode) {
       (MAX_ROW - 2 + 1) / 2,
       (MAX_COL - 2 + 1) / 2
     );
+  } else if (maze === "HUNT-AND-KILL") {
+    huntAndKill(grid, startNode, endNode, walls);
   }
 }
 
