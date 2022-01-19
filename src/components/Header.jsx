@@ -85,9 +85,12 @@ export default function Header({
 
   return (
     <div className="flex flex-row h-full items-center justify-between">
-      <div className="text-center text-2xl font-mono font-extrabold">
+      <button
+        className="text-center text-2xl font-mono font-extrabold"
+        onClick={() => window.location.reload()}
+      >
         PATHFINDING VISUALIZER
-      </div>
+      </button>
       <div className="flex flex-row items-center gap-6">
         <div className="relative group">
           <button
