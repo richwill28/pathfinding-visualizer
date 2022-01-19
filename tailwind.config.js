@@ -54,8 +54,7 @@ module.exports = {
         },
         wall: {
           "0%": {
-            transform: "scale(0.3)",
-            backgroundColor: "rgba(55, 61, 81, 1)",
+            transform: "scale(0.7)",
           },
           "100%": {
             transform: "scale(1)",
@@ -67,7 +66,7 @@ module.exports = {
         toggleOn: "toggleOn 0.5s cubic-bezier(0.4, 0, 0.2, 1)",
         visited: "visited 1.5s cubic-bezier(0, 0, 0.2, 1)",
         path: "path 1.5s cubic-bezier(0, 0, 0.2, 1)",
-        wall: "wall 1s cubic-bezier(0.4, 0, 0.2, 1)",
+        wall: "wall 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
       },
     },
   },

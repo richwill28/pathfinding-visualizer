@@ -58,22 +58,22 @@ export default function Header({
     }, DELAY_VISIT * visitedNodes.length + DELAY_PATH * (shortestPath.length + 40)); // not arbitrary value
   };
 
+  const [isDark, setIsDark] = isDarkState;
+
   const handleMazeGeneration = () => {
     cleanGrid(grid);
     renderCleanGrid(grid, startNode, endNode);
 
     const walls = [];
     runMazeAlgorithm(maze, grid, walls, startNode, endNode);
-    animateWall(walls);
+    animateWall(walls, isDark);
 
     // re-render grid
     setTimeout(() => {
       const newGrid = grid.slice();
       setGrid(newGrid);
-    }, DELAY_WALL * (walls.length + 100)); // not arbitrary value
+    }, DELAY_WALL * (walls.length + 30)); // not arbitrary value
   };
-
-  const [isDark, setIsDark] = isDarkState;
 
   const toggleIcon = isDark ? <MoonIcon /> : <SunIcon />;
 
