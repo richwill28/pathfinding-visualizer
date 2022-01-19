@@ -74,6 +74,7 @@ export default function Header({
     setTimeout(() => {
       const newGrid = grid.slice();
       setGrid(newGrid);
+      setIsGraphVisualized(false);
     }, DELAY_WALL * (walls.length + 30)); // not arbitrary value
   };
 
@@ -193,7 +194,6 @@ export function runGraphAlgorithm(algorithm, grid, startNode, endNode) {
 
 function runMazeAlgorithm(maze, grid, walls, startNode, endNode) {
   if (maze === "BINARY TREE") {
-    generateBorder(grid, walls, startNode, endNode);
     binaryTree(grid, startNode, endNode, walls);
   } else if (maze === "RECURSIVE DIVISION") {
     generateBorder(grid, walls, startNode, endNode);
