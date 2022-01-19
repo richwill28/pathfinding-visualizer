@@ -8,6 +8,7 @@ import { animatePath, animateWall } from "../utils/animation";
 import { MAX_ROW, MAX_COL } from "../utils/constants/max";
 import { DELAY_PATH, DELAY_VISIT, DELAY_WALL } from "../utils/constants/delay";
 import { SunIcon, MoonIcon } from "./Icon";
+import { STYLE_UNVISITED } from "../utils/constants/style";
 
 export default function Header({
   gridState,
@@ -35,9 +36,10 @@ export default function Header({
   };
 
   const handleGraphVisualization = () => {
-    // if (isGraphVisualized) {
-    //   refreshGrid(grid);
-    // }
+    if (isGraphVisualized) {
+      refreshGrid(grid);
+      renderRefreshGrid(grid, startNode, endNode);
+    }
 
     const { visitedNodes, shortestPath } = runGraphAlgorithm(
       algorithm,
@@ -45,8 +47,9 @@ export default function Header({
       startNode,
       endNode
     );
-    const newGrid = grid.slice();
     animatePath(visitedNodes, shortestPath);
+
+    const newGrid = grid.slice();
 
     // re-render grid
     setTimeout(() => {
@@ -56,6 +59,9 @@ export default function Header({
   };
 
   const handleMazeGeneration = () => {
+    cleanGrid(grid);
+    renderCleanGrid(grid, startNode, endNode);
+
     const walls = [];
     runMazeAlgorithm(maze, grid, walls, startNode, endNode);
     animateWall(walls);
@@ -179,7 +185,7 @@ export function runGraphAlgorithm(algorithm, grid, startNode, endNode) {
 
 function runMazeAlgorithm(maze, grid, walls, startNode, endNode) {
   if (maze === "RECURSIVE DIVISION") {
-    generateBorder(grid, walls);
+    generateBorder(grid, walls, startNode, endNode);
     recursiveDivision(
       grid,
       startNode,
@@ -193,29 +199,49 @@ function runMazeAlgorithm(maze, grid, walls, startNode, endNode) {
   }
 }
 
-function generateBorder(grid, walls) {
+function generateBorder(grid, walls, startNode, endNode) {
   // top
   for (let i = 0; i < MAX_COL; i++) {
-    grid[0][i].isWall = true;
-    walls.push(grid[0][i]);
+    if (
+      !(startNode.row === 0 && startNode.col === i) &&
+      !(endNode.row === 0 && endNode.col === i)
+    ) {
+      grid[0][i].isWall = true;
+      walls.push(grid[0][i]);
+    }
   }
 
   // right
   for (let i = 1; i < MAX_ROW; i++) {
-    grid[i][MAX_COL - 1].isWall = true;
-    walls.push(grid[i][MAX_COL - 1]);
+    if (
+      !(startNode.row === i && startNode.col === MAX_COL - 1) &&
+      !(endNode.row === i && endNode.col === MAX_COL - 1)
+    ) {
+      grid[i][MAX_COL - 1].isWall = true;
+      walls.push(grid[i][MAX_COL - 1]);
+    }
   }
 
   // bottom
   for (let i = MAX_COL - 2; i >= 0; i--) {
-    grid[MAX_ROW - 1][i].isWall = true;
-    walls.push(grid[MAX_ROW - 1][i]);
+    if (
+      !(startNode.row === MAX_ROW - 1 && startNode.col === i) &&
+      !(endNode.row === MAX_ROW - 1 && endNode.col === i)
+    ) {
+      grid[MAX_ROW - 1][i].isWall = true;
+      walls.push(grid[MAX_ROW - 1][i]);
+    }
   }
 
   // left
   for (let i = MAX_ROW - 2; i >= 1; i--) {
-    grid[i][0].isWall = true;
-    walls.push(grid[i][0]);
+    if (
+      !(startNode.row === i && startNode.col === 0) &&
+      !(endNode.row === i && endNode.col === 0)
+    ) {
+      grid[i][0].isWall = true;
+      walls.push(grid[i][0]);
+    }
   }
 }
 
@@ -231,6 +257,22 @@ export function refreshGrid(grid) {
   }
 }
 
+function renderRefreshGrid(grid, startNode, endNode) {
+  for (const row of grid) {
+    for (const node of row) {
+      if (!node.isWall) {
+        if (
+          !(node.row === startNode.row && node.col === startNode.col) &&
+          !(node.row === endNode.row && node.col === endNode.col)
+        ) {
+          document.getElementById(`${node.row}-${node.col}`).className =
+            STYLE_UNVISITED;
+        }
+      }
+    }
+  }
+}
+
 // does not preserve walls
 export function cleanGrid(grid) {
   for (const row of grid) {
@@ -240,6 +282,20 @@ export function cleanGrid(grid) {
       node.isWall = false;
       node.isPath = false;
       node.parent = null;
+    }
+  }
+}
+
+function renderCleanGrid(grid, startNode, endNode) {
+  for (const row of grid) {
+    for (const node of row) {
+      if (
+        !(node.row === startNode.row && node.col === startNode.col) &&
+        !(node.row === endNode.row && node.col === endNode.col)
+      ) {
+        document.getElementById(`${node.row}-${node.col}`).className =
+          STYLE_UNVISITED;
+      }
     }
   }
 }
