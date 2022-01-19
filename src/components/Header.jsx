@@ -3,7 +3,9 @@ import bfs from "../utils/algorithms/graph/bfs";
 import dfs from "../utils/algorithms/graph/dfs";
 import dijkstra from "../utils/algorithms/graph/dijkstra";
 import astar from "../utils/algorithms/graph/astar";
+import binaryTree from "../utils/algorithms/maze/binaryTree";
 import recursiveDivision from "../utils/algorithms/maze/recursiveDivision";
+import isEqual from "../utils/isEqual";
 import { animatePath, animateWall } from "../utils/animation";
 import { MAX_ROW, MAX_COL } from "../utils/constants/max";
 import { DELAY_PATH, DELAY_VISIT, DELAY_WALL } from "../utils/constants/delay";
@@ -111,6 +113,12 @@ export default function Header({
                 <div className="relative grid gap-1 bg-white px-2 py-2 rounded dark:bg-slate-900">
                   <button
                     className="rounded text-[15px] text-left font-mono font-bold border-2 border-transparent hover:border-sky-400 p-1.5"
+                    onClick={() => handleMazeChoice("BINARY TREE")}
+                  >
+                    BINARY TREE
+                  </button>
+                  <button
+                    className="rounded text-[15px] text-left font-mono font-bold border-2 border-transparent hover:border-sky-400 p-1.5"
                     onClick={() => handleMazeChoice("RECURSIVE DIVISION")}
                   >
                     RECURSIVE DIVISION
@@ -184,7 +192,10 @@ export function runGraphAlgorithm(algorithm, grid, startNode, endNode) {
 }
 
 function runMazeAlgorithm(maze, grid, walls, startNode, endNode) {
-  if (maze === "RECURSIVE DIVISION") {
+  if (maze === "BINARY TREE") {
+    generateBorder(grid, walls, startNode, endNode);
+    binaryTree(grid, startNode, endNode, walls);
+  } else if (maze === "RECURSIVE DIVISION") {
     generateBorder(grid, walls, startNode, endNode);
     recursiveDivision(
       grid,
@@ -202,10 +213,7 @@ function runMazeAlgorithm(maze, grid, walls, startNode, endNode) {
 function generateBorder(grid, walls, startNode, endNode) {
   // top
   for (let i = 0; i < MAX_COL; i++) {
-    if (
-      !(startNode.row === 0 && startNode.col === i) &&
-      !(endNode.row === 0 && endNode.col === i)
-    ) {
+    if (!isEqual(grid[0][i], startNode) && !isEqual(grid[0][i], endNode)) {
       grid[0][i].isWall = true;
       walls.push(grid[0][i]);
     }
@@ -214,8 +222,8 @@ function generateBorder(grid, walls, startNode, endNode) {
   // right
   for (let i = 1; i < MAX_ROW; i++) {
     if (
-      !(startNode.row === i && startNode.col === MAX_COL - 1) &&
-      !(endNode.row === i && endNode.col === MAX_COL - 1)
+      !isEqual(grid[i][MAX_COL - i], startNode) &&
+      !isEqual(grid[i][MAX_COL - i], endNode)
     ) {
       grid[i][MAX_COL - 1].isWall = true;
       walls.push(grid[i][MAX_COL - 1]);
@@ -225,8 +233,8 @@ function generateBorder(grid, walls, startNode, endNode) {
   // bottom
   for (let i = MAX_COL - 2; i >= 0; i--) {
     if (
-      !(startNode.row === MAX_ROW - 1 && startNode.col === i) &&
-      !(endNode.row === MAX_ROW - 1 && endNode.col === i)
+      !isEqual(grid[MAX_ROW - i][i], startNode) &&
+      !isEqual(grid[MAX_ROW - i][i], endNode)
     ) {
       grid[MAX_ROW - 1][i].isWall = true;
       walls.push(grid[MAX_ROW - 1][i]);
@@ -235,10 +243,7 @@ function generateBorder(grid, walls, startNode, endNode) {
 
   // left
   for (let i = MAX_ROW - 2; i >= 1; i--) {
-    if (
-      !(startNode.row === i && startNode.col === 0) &&
-      !(endNode.row === i && endNode.col === 0)
-    ) {
+    if (!isEqual(grid[i][0], startNode) && !isEqual(grid[i][0], endNode)) {
       grid[i][0].isWall = true;
       walls.push(grid[i][0]);
     }
@@ -261,10 +266,7 @@ function renderRefreshGrid(grid, startNode, endNode) {
   for (const row of grid) {
     for (const node of row) {
       if (!node.isWall) {
-        if (
-          !(node.row === startNode.row && node.col === startNode.col) &&
-          !(node.row === endNode.row && node.col === endNode.col)
-        ) {
+        if (!isEqual(startNode, node) && !isEqual(endNode, node)) {
           document.getElementById(`${node.row}-${node.col}`).className =
             STYLE_UNVISITED;
         }
@@ -289,10 +291,7 @@ export function cleanGrid(grid) {
 function renderCleanGrid(grid, startNode, endNode) {
   for (const row of grid) {
     for (const node of row) {
-      if (
-        !(node.row === startNode.row && node.col === startNode.col) &&
-        !(node.row === endNode.row && node.col === endNode.col)
-      ) {
+      if (!isEqual(startNode, node) && !isEqual(endNode, node)) {
         document.getElementById(`${node.row}-${node.col}`).className =
           STYLE_UNVISITED;
       }

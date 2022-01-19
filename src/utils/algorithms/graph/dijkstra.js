@@ -1,4 +1,5 @@
 import { MAX_ROW, MAX_COL } from "../../constants/max";
+import isEqual from "../../isEqual";
 
 // non-optimized implementation without using proper priority queue data structure
 export default function bfs(grid, startNode, endNode) {
@@ -17,7 +18,7 @@ export default function bfs(grid, startNode, endNode) {
     if (node.distance === Infinity) break; // trapped
     node.isVisited = true;
     visitedNodes.push(node);
-    if (node.row === endNode.row && node.col === endNode.col) break; // finish
+    if (isEqual(node, endNode)) break; // finish
 
     // traverse neighbors
     const neighbors = getUnvisitedNeighbors(grid, node);
@@ -54,7 +55,7 @@ function getUnvisitedNeighbors(grid, node) {
 
 function isInQueue(node, queue) {
   for (const element of queue) {
-    if (node.row === element.row && node.col === element.col) {
+    if (isEqual(node, element)) {
       return true;
     }
   }

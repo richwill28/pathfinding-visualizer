@@ -1,3 +1,5 @@
+import isEqual from "../../isEqual";
+
 export default function recursiveDivision(
   grid,
   startNode,
@@ -44,8 +46,8 @@ function divideHorizontally(
   for (let i = 0; i < 2 * width - 1; i++) {
     if (generatePassageAt !== col + i) {
       if (
-        !(generateWallAt === startNode.row && col + i === startNode.col) &&
-        !(generateWallAt === endNode.row && col + i === endNode.col)
+        !isEqual(grid[generateWallAt][col + i], startNode) &&
+        !isEqual(grid[generateWallAt][col + i], endNode)
       ) {
         grid[generateWallAt][col + i].isWall = true;
         walls.push(grid[generateWallAt][col + i]);
@@ -91,8 +93,8 @@ function divideVertically(
   for (let i = 0; i < 2 * height - 1; i++) {
     if (generatePassageAt !== row + i) {
       if (
-        !(row + i === startNode.row && generateWallAt === startNode.col) &&
-        !(row + i === endNode.row && generateWallAt === endNode.col)
+        !isEqual(grid[row + i][generateWallAt], startNode) &&
+        !isEqual(grid[row + i][generateWallAt], endNode)
       ) {
         grid[row + i][generateWallAt].isWall = true;
         walls.push(grid[row + i][generateWallAt]);
