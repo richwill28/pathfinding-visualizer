@@ -222,8 +222,8 @@ function generateBorder(grid, walls, startNode, endNode) {
   // right
   for (let i = 1; i < MAX_ROW; i++) {
     if (
-      !isEqual(grid[i][MAX_COL - i], startNode) &&
-      !isEqual(grid[i][MAX_COL - i], endNode)
+      !isEqual(grid[i][MAX_COL - 1], startNode) &&
+      !isEqual(grid[i][MAX_COL - 1], endNode)
     ) {
       grid[i][MAX_COL - 1].isWall = true;
       walls.push(grid[i][MAX_COL - 1]);
@@ -233,8 +233,8 @@ function generateBorder(grid, walls, startNode, endNode) {
   // bottom
   for (let i = MAX_COL - 2; i >= 0; i--) {
     if (
-      !isEqual(grid[MAX_ROW - i][i], startNode) &&
-      !isEqual(grid[MAX_ROW - i][i], endNode)
+      !isEqual(grid[MAX_ROW - 1][i], startNode) &&
+      !isEqual(grid[MAX_ROW - 1][i], endNode)
     ) {
       grid[MAX_ROW - 1][i].isWall = true;
       walls.push(grid[MAX_ROW - 1][i]);
