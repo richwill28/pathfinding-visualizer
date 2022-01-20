@@ -8,7 +8,9 @@ const INITIAL_START = { row: 1, col: 1 };
 const INITIAL_END = { row: MAX_ROW - 2, col: MAX_COL - 2 };
 
 export default function App() {
-  const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+  const prefersDark =
+    localStorage.theme === "dark" ||
+    window.matchMedia("(prefers-color-scheme: dark)").matches;
   const [isDark, setIsDark] = useState(prefersDark);
 
   const [startNode, setStartNode] = useState(INITIAL_START);

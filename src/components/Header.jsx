@@ -85,6 +85,7 @@ export default function Header({
     }, 120);
     setTimeout(() => {
       setIsDark(!isDark);
+      localStorage.theme = isDark ? "light" : "dark";
     }, 80);
   };
 
