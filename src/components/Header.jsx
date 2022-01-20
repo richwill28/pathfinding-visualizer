@@ -7,9 +7,10 @@ import binaryTree from "../utils/algorithms/maze/binaryTree";
 import recursiveDivision from "../utils/algorithms/maze/recursiveDivision";
 import huntAndKill from "../utils/algorithms/maze/huntAndKill";
 import isEqual from "../utils/isEqual";
-import { animatePath, animateWall } from "../utils/animation";
+import generateBorder from "../utils/generateBorder";
+import { animatePath } from "../utils/animation";
 import { MAX_ROW, MAX_COL } from "../utils/constants/max";
-import { DELAY_PATH, DELAY_VISIT, DELAY_WALL } from "../utils/constants/delay";
+import { DELAY_PATH, DELAY_VISIT } from "../utils/constants/delay";
 import { SunIcon, MoonIcon } from "./Icon";
 import { STYLE_UNVISITED } from "../utils/constants/style";
 
@@ -67,16 +68,12 @@ export default function Header({
     cleanGrid(grid);
     renderCleanGrid(grid, startNode, endNode);
 
-    const walls = [];
-    runMazeAlgorithm(maze, grid, walls, startNode, endNode);
-    animateWall(walls, isDark);
+    runMazeAlgorithm(maze, grid, startNode, endNode, isDark);
 
     // re-render grid
-    setTimeout(() => {
-      const newGrid = grid.slice();
-      setGrid(newGrid);
-      setIsGraphVisualized(false);
-    }, DELAY_WALL * (walls.length + 30)); // not arbitrary value
+    const newGrid = grid.slice();
+    setGrid(newGrid);
+    setIsGraphVisualized(false);
   };
 
   const toggleIcon = isDark ? <MoonIcon /> : <SunIcon />;
@@ -199,63 +196,22 @@ export function runGraphAlgorithm(algorithm, grid, startNode, endNode) {
   }
 }
 
-function runMazeAlgorithm(maze, grid, walls, startNode, endNode) {
+function runMazeAlgorithm(maze, grid, startNode, endNode, isDark) {
   if (maze === "BINARY TREE") {
-    binaryTree(grid, startNode, endNode, walls);
+    binaryTree(grid, startNode, endNode);
   } else if (maze === "RECURSIVE DIVISION") {
-    generateBorder(grid, walls, startNode, endNode);
+    generateBorder(grid, startNode, endNode);
     recursiveDivision(
       grid,
       startNode,
       endNode,
-      walls,
       1,
       1,
       (MAX_ROW - 2 + 1) / 2,
       (MAX_COL - 2 + 1) / 2
     );
   } else if (maze === "HUNT-AND-KILL") {
-    huntAndKill(grid, startNode, endNode, walls);
-  }
-}
-
-function generateBorder(grid, walls, startNode, endNode) {
-  // top
-  for (let i = 0; i < MAX_COL; i++) {
-    if (!isEqual(grid[0][i], startNode) && !isEqual(grid[0][i], endNode)) {
-      grid[0][i].isWall = true;
-      walls.push(grid[0][i]);
-    }
-  }
-
-  // right
-  for (let i = 1; i < MAX_ROW; i++) {
-    if (
-      !isEqual(grid[i][MAX_COL - 1], startNode) &&
-      !isEqual(grid[i][MAX_COL - 1], endNode)
-    ) {
-      grid[i][MAX_COL - 1].isWall = true;
-      walls.push(grid[i][MAX_COL - 1]);
-    }
-  }
-
-  // bottom
-  for (let i = MAX_COL - 2; i >= 0; i--) {
-    if (
-      !isEqual(grid[MAX_ROW - 1][i], startNode) &&
-      !isEqual(grid[MAX_ROW - 1][i], endNode)
-    ) {
-      grid[MAX_ROW - 1][i].isWall = true;
-      walls.push(grid[MAX_ROW - 1][i]);
-    }
-  }
-
-  // left
-  for (let i = MAX_ROW - 2; i >= 1; i--) {
-    if (!isEqual(grid[i][0], startNode) && !isEqual(grid[i][0], endNode)) {
-      grid[i][0].isWall = true;
-      walls.push(grid[i][0]);
-    }
+    huntAndKill(grid, startNode, endNode);
   }
 }
 

@@ -1,17 +1,30 @@
 import { MAX_COL, MAX_ROW } from "../../constants/max";
+import { STYLE_UNVISITED, STYLE_WALL_DARK } from "../../constants/style";
 import isEqual from "../../isEqual";
+import getRandomInt from "../../getRandomInt";
+import sleep from "../../sleep";
 
-export default function huntAndKill(grid, startNode, endNode, walls) {
+export default async function huntAndKill(grid, startNode, endNode) {
   const isVisited = [];
 
   // generate walls
   for (const row of grid) {
     const isVisitedRow = [];
     for (const node of row) {
-      if (node.row % 2 === 0 || node.col % 2 === 0) {
-        if (!isEqual(node, startNode) && !isEqual(node, endNode)) {
+      if (!isEqual(node, startNode) && !isEqual(node, endNode)) {
+        if (node.row % 2 === 0 || node.col % 2 === 0) {
           node.isWall = true;
         }
+
+        await renderGrid(
+          node.row,
+          node.col,
+          STYLE_WALL_DARK,
+          " animate-wall",
+          0.1,
+          startNode,
+          endNode
+        );
       }
       isVisitedRow.push(false);
     }
@@ -25,45 +38,49 @@ export default function huntAndKill(grid, startNode, endNode, walls) {
     }
   }
 
-  // main routine
   const node = { row: 1, col: 1 };
   isVisited[node.row][node.col] = true;
   unvisitedCount--;
+
+  // main routine
   while (unvisitedCount > 0) {
-    const { isMazeCompleted, updatedCount } = randomWalk(
+    const { isMazeComplete, updatedCount } = await randomWalk(
       grid,
       node,
       isVisited,
-      unvisitedCount
+      unvisitedCount,
+      startNode,
+      endNode
     );
     unvisitedCount = updatedCount;
-    if (!isMazeCompleted) {
-      const { row, col, updatedCount } = hunt(
+    if (!isMazeComplete) {
+      const { row, col, updatedCount } = await hunt(
         grid,
         node,
         isVisited,
-        unvisitedCount
+        unvisitedCount,
+        startNode,
+        endNode
       );
       node.row = row;
       node.col = col;
       unvisitedCount = updatedCount;
     }
   }
-
-  for (const row of grid) {
-    for (const node of row) {
-      if (node.isWall) {
-        walls.push(node);
-      }
-    }
-  }
 }
 
-function randomWalk(grid, node, isVisited, unvisitedCount) {
+async function randomWalk(
+  grid,
+  node,
+  isVisited,
+  unvisitedCount,
+  startNode,
+  endNode
+) {
   while (unvisitedCount > 0) {
     const hasUnvisitedNeighbor = findUnvisitedNeighbor(node, isVisited);
     if (!hasUnvisitedNeighbor) {
-      return { isMazeCompleted: false, updatedCount: unvisitedCount };
+      return { isMazeComplete: false, updatedCount: unvisitedCount };
     }
 
     const direction = getRandomInt(0, 4);
@@ -74,6 +91,25 @@ function randomWalk(grid, node, isVisited, unvisitedCount) {
         grid[node.row][node.col - 1].isWall = false;
         unvisitedCount--;
         node.col -= 2;
+
+        await renderGrid(
+          node.row,
+          node.col + 1,
+          STYLE_UNVISITED,
+          "",
+          15,
+          startNode,
+          endNode
+        );
+        await renderGrid(
+          node.row,
+          node.col,
+          STYLE_UNVISITED,
+          "",
+          15,
+          startNode,
+          endNode
+        );
       }
     } else if (direction === 1) {
       // traverse up
@@ -82,6 +118,25 @@ function randomWalk(grid, node, isVisited, unvisitedCount) {
         grid[node.row - 1][node.col].isWall = false;
         unvisitedCount--;
         node.row -= 2;
+
+        await renderGrid(
+          node.row + 1,
+          node.col,
+          STYLE_UNVISITED,
+          "",
+          15,
+          startNode,
+          endNode
+        );
+        await renderGrid(
+          node.row,
+          node.col,
+          STYLE_UNVISITED,
+          "",
+          15,
+          startNode,
+          endNode
+        );
       }
     } else if (direction === 2) {
       // traverse right
@@ -90,6 +145,25 @@ function randomWalk(grid, node, isVisited, unvisitedCount) {
         grid[node.row][node.col + 1].isWall = false;
         unvisitedCount--;
         node.col += 2;
+
+        await renderGrid(
+          node.row,
+          node.col - 1,
+          STYLE_UNVISITED,
+          "",
+          15,
+          startNode,
+          endNode
+        );
+        await renderGrid(
+          node.row,
+          node.col,
+          STYLE_UNVISITED,
+          "",
+          15,
+          startNode,
+          endNode
+        );
       }
     } else if (direction === 3) {
       // traverse down
@@ -98,16 +172,33 @@ function randomWalk(grid, node, isVisited, unvisitedCount) {
         grid[node.row + 1][node.col].isWall = false;
         unvisitedCount--;
         node.row += 2;
+
+        await renderGrid(
+          node.row - 1,
+          node.col,
+          STYLE_UNVISITED,
+          "",
+          15,
+          startNode,
+          endNode
+        );
+        await renderGrid(
+          node.row,
+          node.col,
+          STYLE_UNVISITED,
+          "",
+          15,
+          startNode,
+          endNode
+        );
       }
     }
   }
 
-  return { isMazeCompleted: true, updatedCount: unvisitedCount };
+  return { isMazeComplete: true, updatedCount: unvisitedCount };
 }
 
-function hunt(grid, node, isVisited, unvisitedCount) {
-  let row = node.row;
-  let col = node.col;
+async function hunt(grid, node, isVisited, unvisitedCount, startNode, endNode) {
   for (let i = 1; i < MAX_ROW; i += 2) {
     for (let j = 1; j < MAX_COL; j += 2) {
       if (!isVisited[i][j]) {
@@ -115,35 +206,75 @@ function hunt(grid, node, isVisited, unvisitedCount) {
           isVisited[i][j] = true;
           grid[i][j - 1].isWall = false;
           unvisitedCount--;
-          row = i;
-          col = j - 2;
-          return { row: row, col: col, updatedCount: unvisitedCount };
+
+          await renderGrid(
+            i,
+            j - 1,
+            STYLE_UNVISITED,
+            "",
+            15,
+            startNode,
+            endNode
+          );
+          await renderGrid(i, j, STYLE_UNVISITED, "", 15, startNode, endNode);
+
+          return { row: i, col: j, updatedCount: unvisitedCount };
         } else if (isVisited[i - 2][j]) {
           isVisited[i][j] = true;
           grid[i - 1][j].isWall = false;
           unvisitedCount--;
-          row = i - 2;
-          col = j;
-          return { row: row, col: col, updatedCount: unvisitedCount };
+
+          await renderGrid(
+            i - 1,
+            j,
+            STYLE_UNVISITED,
+            "",
+            15,
+            startNode,
+            endNode
+          );
+          await renderGrid(i, j, STYLE_UNVISITED, "", 15, startNode, endNode);
+
+          return { row: i, col: j, updatedCount: unvisitedCount };
         } else if (isVisited[i][j + 2]) {
           isVisited[i][j] = true;
           grid[i][j + 1].isWall = false;
           unvisitedCount--;
-          row = i;
-          col = j + 2;
-          return { row: row, col: col, updatedCount: unvisitedCount };
+
+          await renderGrid(
+            i,
+            j + 1,
+            STYLE_UNVISITED,
+            "",
+            15,
+            startNode,
+            endNode
+          );
+          await renderGrid(i, j, STYLE_UNVISITED, "", 15, startNode, endNode);
+
+          return { row: i, col: j, updatedCount: unvisitedCount };
         } else if (isVisited[i + 2][j]) {
           isVisited[i][j] = true;
           grid[i + 1][j].isWall = false;
           unvisitedCount--;
-          row = i + 2;
-          col = j;
-          return { row: row, col: col, updatedCount: unvisitedCount };
+
+          await renderGrid(
+            i + 1,
+            j,
+            STYLE_UNVISITED,
+            "",
+            15,
+            startNode,
+            endNode
+          );
+          await renderGrid(i, j, STYLE_UNVISITED, "", 15, startNode, endNode);
+
+          return { row: i, col: j, updatedCount: unvisitedCount };
         }
       }
     }
   }
-  return { row: row, col: col, updatedCount: unvisitedCount };
+  return { row: node.row, col: node.col, updatedCount: unvisitedCount };
 }
 
 function findUnvisitedNeighbor(node, isVisited) {
@@ -159,9 +290,19 @@ function findUnvisitedNeighbor(node, isVisited) {
   return false;
 }
 
-// minimum is inclusive and maximum is exclusive
-function getRandomInt(min, max) {
-  min = Math.ceil(min);
-  max = Math.floor(max);
-  return Math.floor(Math.random() * (max - min) + min);
+async function renderGrid(
+  row,
+  col,
+  style,
+  animation,
+  delay,
+  startNode,
+  endNode
+) {
+  const node = { row: row, col: col };
+  if (!isEqual(node, startNode) && !isEqual(node, endNode)) {
+    document.getElementById(`${node.row}-${node.col}`).className =
+      style + animation;
+    await sleep(delay);
+  }
 }

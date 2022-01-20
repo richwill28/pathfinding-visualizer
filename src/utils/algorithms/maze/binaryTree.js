@@ -1,13 +1,20 @@
 import { MAX_ROW, MAX_COL } from "../../constants/max";
+import { STYLE_UNVISITED, STYLE_WALL_DARK } from "../../constants/style";
 import isEqual from "../../isEqual";
+import getRandomInt from "../../getRandomInt";
+import sleep from "../../sleep";
 
-export default function binaryTree(grid, startNode, endNode, walls) {
+export default async function binaryTree(grid, startNode, endNode) {
   // generate walls
   for (const row of grid) {
     for (const node of row) {
       if (node.row % 2 === 0 || node.col % 2 === 0) {
         if (!isEqual(node, startNode) && !isEqual(node, endNode)) {
           node.isWall = true;
+
+          document.getElementById(`${node.row}-${node.col}`).className =
+            STYLE_WALL_DARK + " animate-wall";
+          await sleep(0.2);
         }
       }
     }
@@ -19,35 +26,26 @@ export default function binaryTree(grid, startNode, endNode, walls) {
       if (row === MAX_ROW - 2 && col === MAX_COL - 2) {
         continue;
       } else if (row === MAX_ROW - 2) {
-        removeWall(grid, row, col, 1); // remove right wall
+        await removeWall(grid, row, col, 1); // remove right wall
       } else if (col === MAX_COL - 2) {
-        removeWall(grid, row, col, 0); // remove bottom wall
+        await removeWall(grid, row, col, 0); // remove bottom wall
       } else {
-        removeWall(grid, row, col, getRandomInt(0, 2));
-      }
-    }
-  }
-
-  for (const row of grid) {
-    for (const node of row) {
-      if (node.isWall) {
-        walls.push(node);
+        await removeWall(grid, row, col, getRandomInt(0, 2));
       }
     }
   }
 }
 
-function removeWall(grid, row, col, isRight) {
+async function removeWall(grid, row, col, isRight) {
   if (isRight) {
     grid[row][col + 1].isWall = false;
+
+    document.getElementById(`${row}-${col + 1}`).className = STYLE_UNVISITED;
+    await sleep(20);
   } else {
     grid[row + 1][col].isWall = false;
-  }
-}
 
-// minimum is inclusive and maximum is exclusive
-function getRandomInt(min, max) {
-  min = Math.ceil(min);
-  max = Math.floor(max);
-  return Math.floor(Math.random() * (max - min) + min);
+    document.getElementById(`${row + 1}-${col}`).className = STYLE_UNVISITED;
+    await sleep(20);
+  }
 }

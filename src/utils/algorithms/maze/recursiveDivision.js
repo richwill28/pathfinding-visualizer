@@ -1,10 +1,12 @@
 import isEqual from "../../isEqual";
+import { STYLE_WALL_DARK } from "../../constants/style";
+import getRandomInt from "../../getRandomInt";
+import sleep from "../../sleep";
 
-export default function recursiveDivision(
+export default async function recursiveDivision(
   grid,
   startNode,
   endNode,
-  walls,
   row,
   col,
   height,
@@ -15,26 +17,16 @@ export default function recursiveDivision(
   }
 
   if (height > width) {
-    divideHorizontally(
-      grid,
-      startNode,
-      endNode,
-      walls,
-      row,
-      col,
-      height,
-      width
-    );
+    await divideHorizontally(grid, startNode, endNode, row, col, height, width);
   } else {
-    divideVertically(grid, startNode, endNode, walls, row, col, height, width);
+    await divideVertically(grid, startNode, endNode, row, col, height, width);
   }
 }
 
-function divideHorizontally(
+async function divideHorizontally(
   grid,
   startNode,
   endNode,
-  walls,
   row,
   col,
   height,
@@ -50,26 +42,27 @@ function divideHorizontally(
         !isEqual(grid[generateWallAt][col + i], endNode)
       ) {
         grid[generateWallAt][col + i].isWall = true;
-        walls.push(grid[generateWallAt][col + i]);
+
+        document.getElementById(`${generateWallAt}-${col + i}`).className =
+          STYLE_WALL_DARK + " animate-wall";
+        await sleep(10);
       }
     }
   }
 
-  recursiveDivision(
+  await recursiveDivision(
     grid,
     startNode,
     endNode,
-    walls,
     row,
     col,
     (generateWallAt - row + 1) / 2,
     width
   );
-  recursiveDivision(
+  await recursiveDivision(
     grid,
     startNode,
     endNode,
-    walls,
     generateWallAt + 1,
     col,
     height - (generateWallAt - row + 1) / 2,
@@ -77,11 +70,10 @@ function divideHorizontally(
   );
 }
 
-function divideVertically(
+async function divideVertically(
   grid,
   startNode,
   endNode,
-  walls,
   row,
   col,
   height,
@@ -97,36 +89,30 @@ function divideVertically(
         !isEqual(grid[row + i][generateWallAt], endNode)
       ) {
         grid[row + i][generateWallAt].isWall = true;
-        walls.push(grid[row + i][generateWallAt]);
+
+        document.getElementById(`${row + i}-${generateWallAt}`).className =
+          STYLE_WALL_DARK + " animate-wall";
+        await sleep(10);
       }
     }
   }
 
-  recursiveDivision(
+  await recursiveDivision(
     grid,
     startNode,
     endNode,
-    walls,
     row,
     col,
     height,
     (generateWallAt - col + 1) / 2
   );
-  recursiveDivision(
+  await recursiveDivision(
     grid,
     startNode,
     endNode,
-    walls,
     row,
     generateWallAt + 1,
     height,
     width - (generateWallAt - col + 1) / 2
   );
-}
-
-// minimum is inclusive and maximum is exclusive
-function getRandomInt(min, max) {
-  min = Math.ceil(min);
-  max = Math.floor(max);
-  return Math.floor(Math.random() * (max - min) + min);
 }
