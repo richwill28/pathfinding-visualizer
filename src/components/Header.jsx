@@ -162,7 +162,7 @@ export default function Header({
                     className="rounded text-[15px] text-left font-mono font-bold border-2 border-transparent hover:border-sky-400 p-1.5"
                     onClick={() => handleAlgoChoice("A*")}
                   >
-                    A* SEARCH
+                    A-STAR
                   </button>
                 </div>
               </div>

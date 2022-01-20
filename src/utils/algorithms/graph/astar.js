@@ -5,6 +5,8 @@ import isEqual from "../../isEqual";
 export default function astar(grid, startNode, endNode) {
   const visitedNodes = [];
 
+  const heuristicDistance = initializeHeuristicDistance(grid, endNode);
+
   const root = grid[startNode.row][startNode.col];
   root.distance = 0;
   root.isVisited = true;
@@ -12,7 +14,12 @@ export default function astar(grid, startNode, endNode) {
   // A* main routine
   const unvisitedNodes = [root];
   while (unvisitedNodes.length > 0) {
-    unvisitedNodes.sort((a, b) => a.distance - b.distance); // node with smaller distance has higher priority
+    unvisitedNodes.sort(
+      (a, b) =>
+        a.distance +
+        heuristicDistance[a.row][a.col] -
+        (b.distance + heuristicDistance[b.row][b.col])
+    ); // node with smaller (distance + hcost) has higher priority
     const node = unvisitedNodes.shift();
     if (node.isWall) continue; // skip wall
     if (node.distance === Infinity) break; // trapped
@@ -60,4 +67,25 @@ function isInQueue(node, queue) {
     }
   }
   return false;
+}
+
+function initializeHeuristicDistance(grid, endNode) {
+  const heuristicDistance = [];
+  for (let i = 0; i < MAX_ROW; i++) {
+    const row = [];
+    for (let j = 0; j < MAX_COL; j++) {
+      row.push(getHeuristicDistance(grid[i][j], endNode));
+    }
+    heuristicDistance.push(row);
+  }
+  return heuristicDistance;
+}
+
+// reference: https://theory.stanford.edu/~amitp/GameProgramming/Heuristics.html
+function getHeuristicDistance(a, b) {
+  // manhattan distance implementation
+  const D = 1.2;
+  const drow = Math.abs(a.row - b.row);
+  const dcol = Math.abs(a.col - b.col);
+  return D * (drow + dcol);
 }
