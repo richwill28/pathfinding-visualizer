@@ -6,7 +6,7 @@ export default function animatePath(visitedNodes, shortestPath) {
       const node = visitedNodes[i];
       document.getElementById(`${node.row}-${node.col}`).className =
         STYLE_VISITED + " animate-visited";
-    }, 12 * i);
+    }, 10 * i);
   }
 
   setTimeout(() => {
@@ -17,5 +17,5 @@ export default function animatePath(visitedNodes, shortestPath) {
           STYLE_PATH + " animate-path";
       }, 40 * i);
     }
-  }, 12 * (visitedNodes.length - 2));
+  }, 10 * (visitedNodes.length - 2));
 }

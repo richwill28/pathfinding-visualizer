@@ -57,7 +57,7 @@ export default function Header({
       const newGrid = grid.slice();
       setGrid(newGrid);
       setIsGraphVisualized(true);
-    }, 12 * visitedNodes.length + 40 * (shortestPath.length + 40)); // not arbitrary value
+    }, 10 * visitedNodes.length + 40 * (shortestPath.length + 40)); // not arbitrary value
   };
 
   const [isDark, setIsDark] = isDarkState;

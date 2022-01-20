@@ -2,7 +2,7 @@ import { MAX_ROW, MAX_COL } from "../../constants/max";
 import isEqual from "../../isEqual";
 
 // non-optimized implementation without using proper stack data structure
-export default function bfs(grid, startNode, endNode) {
+export default function dfs(grid, startNode, endNode) {
   const visitedNodes = [];
 
   const root = grid[startNode.row][startNode.col];
