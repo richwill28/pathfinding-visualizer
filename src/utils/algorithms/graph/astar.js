@@ -19,7 +19,7 @@ export default function astar(grid, startNode, endNode) {
         a.distance +
         heuristicDistance[a.row][a.col] -
         (b.distance + heuristicDistance[b.row][b.col])
-    ); // node with smaller (distance + hcost) has higher priority
+    ); // node with smaller (distance + heuristic) has higher priority
     const node = unvisitedNodes.shift();
     if (node.isWall) continue; // skip wall
     if (node.distance === Infinity) break; // trapped
