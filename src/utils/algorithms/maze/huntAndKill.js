@@ -1,10 +1,14 @@
 import { MAX_COL, MAX_ROW } from "../../constants/max";
-import { STYLE_UNVISITED, STYLE_WALL_DARK } from "../../constants/style";
+import {
+  STYLE_UNVISITED,
+  STYLE_WALL_DARK,
+  STYLE_WALL_LIGHT,
+} from "../../constants/style";
 import isEqual from "../../isEqual";
 import getRandomInt from "../../getRandomInt";
 import sleep from "../../sleep";
 
-export default async function huntAndKill(grid, startNode, endNode) {
+export default async function huntAndKill(grid, startNode, endNode, isDark) {
   const isVisited = [];
 
   // generate walls
@@ -19,7 +23,7 @@ export default async function huntAndKill(grid, startNode, endNode) {
         await renderGrid(
           node.row,
           node.col,
-          STYLE_WALL_DARK,
+          isDark ? STYLE_WALL_LIGHT : STYLE_WALL_DARK,
           " animate-wall",
           0.1,
           startNode,

@@ -1,5 +1,5 @@
 import isEqual from "../../isEqual";
-import { STYLE_WALL_DARK } from "../../constants/style";
+import { STYLE_WALL_DARK, STYLE_WALL_LIGHT } from "../../constants/style";
 import getRandomInt from "../../getRandomInt";
 import sleep from "../../sleep";
 
@@ -10,16 +10,35 @@ export default async function recursiveDivision(
   row,
   col,
   height,
-  width
+  width,
+  isDark
 ) {
   if (height <= 1 || width <= 1) {
     return;
   }
 
   if (height > width) {
-    await divideHorizontally(grid, startNode, endNode, row, col, height, width);
+    await divideHorizontally(
+      grid,
+      startNode,
+      endNode,
+      row,
+      col,
+      height,
+      width,
+      isDark
+    );
   } else {
-    await divideVertically(grid, startNode, endNode, row, col, height, width);
+    await divideVertically(
+      grid,
+      startNode,
+      endNode,
+      row,
+      col,
+      height,
+      width,
+      isDark
+    );
   }
 }
 
@@ -30,7 +49,8 @@ async function divideHorizontally(
   row,
   col,
   height,
-  width
+  width,
+  isDark
 ) {
   const generateWallAt = row + getRandomInt(0, height - 1) * 2 + 1;
   const generatePassageAt = col + getRandomInt(0, width) * 2;
@@ -44,7 +64,7 @@ async function divideHorizontally(
         grid[generateWallAt][col + i].isWall = true;
 
         document.getElementById(`${generateWallAt}-${col + i}`).className =
-          STYLE_WALL_DARK + " animate-wall";
+          (isDark ? STYLE_WALL_LIGHT : STYLE_WALL_DARK) + " animate-wall";
         await sleep(10);
       }
     }
@@ -57,7 +77,8 @@ async function divideHorizontally(
     row,
     col,
     (generateWallAt - row + 1) / 2,
-    width
+    width,
+    isDark
   );
   await recursiveDivision(
     grid,
@@ -66,7 +87,8 @@ async function divideHorizontally(
     generateWallAt + 1,
     col,
     height - (generateWallAt - row + 1) / 2,
-    width
+    width,
+    isDark
   );
 }
 
@@ -77,7 +99,8 @@ async function divideVertically(
   row,
   col,
   height,
-  width
+  width,
+  isDark
 ) {
   const generateWallAt = col + getRandomInt(0, width - 1) * 2 + 1;
   const generatePassageAt = row + getRandomInt(0, height) * 2;
@@ -91,7 +114,7 @@ async function divideVertically(
         grid[row + i][generateWallAt].isWall = true;
 
         document.getElementById(`${row + i}-${generateWallAt}`).className =
-          STYLE_WALL_DARK + " animate-wall";
+          (isDark ? STYLE_WALL_LIGHT : STYLE_WALL_DARK) + " animate-wall";
         await sleep(10);
       }
     }
@@ -104,7 +127,8 @@ async function divideVertically(
     row,
     col,
     height,
-    (generateWallAt - col + 1) / 2
+    (generateWallAt - col + 1) / 2,
+    isDark
   );
   await recursiveDivision(
     grid,
@@ -113,6 +137,7 @@ async function divideVertically(
     row,
     generateWallAt + 1,
     height,
-    width - (generateWallAt - col + 1) / 2
+    width - (generateWallAt - col + 1) / 2,
+    isDark
   );
 }

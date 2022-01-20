@@ -8,9 +8,8 @@ import recursiveDivision from "../utils/algorithms/maze/recursiveDivision";
 import huntAndKill from "../utils/algorithms/maze/huntAndKill";
 import isEqual from "../utils/isEqual";
 import generateBorder from "../utils/generateBorder";
-import { animatePath } from "../utils/animation";
+import animatePath from "../utils/animatePath";
 import { MAX_ROW, MAX_COL } from "../utils/constants/max";
-import { DELAY_PATH, DELAY_VISIT } from "../utils/constants/delay";
 import { SunIcon, MoonIcon } from "./Icon";
 import { STYLE_UNVISITED } from "../utils/constants/style";
 
@@ -53,13 +52,12 @@ export default function Header({
     );
     animatePath(visitedNodes, shortestPath);
 
-    const newGrid = grid.slice();
-
     // re-render grid
     setTimeout(() => {
+      const newGrid = grid.slice();
       setGrid(newGrid);
       setIsGraphVisualized(true);
-    }, DELAY_VISIT * visitedNodes.length + DELAY_PATH * (shortestPath.length + 40)); // not arbitrary value
+    }, 12 * visitedNodes.length + 40 * (shortestPath.length + 40)); // not arbitrary value
   };
 
   const [isDark, setIsDark] = isDarkState;
@@ -198,9 +196,9 @@ export function runGraphAlgorithm(algorithm, grid, startNode, endNode) {
 
 function runMazeAlgorithm(maze, grid, startNode, endNode, isDark) {
   if (maze === "BINARY TREE") {
-    binaryTree(grid, startNode, endNode);
+    binaryTree(grid, startNode, endNode, isDark);
   } else if (maze === "RECURSIVE DIVISION") {
-    generateBorder(grid, startNode, endNode);
+    generateBorder(grid, startNode, endNode, isDark);
     recursiveDivision(
       grid,
       startNode,
@@ -208,10 +206,11 @@ function runMazeAlgorithm(maze, grid, startNode, endNode, isDark) {
       1,
       1,
       (MAX_ROW - 2 + 1) / 2,
-      (MAX_COL - 2 + 1) / 2
+      (MAX_COL - 2 + 1) / 2,
+      isDark
     );
   } else if (maze === "HUNT-AND-KILL") {
-    huntAndKill(grid, startNode, endNode);
+    huntAndKill(grid, startNode, endNode, isDark);
   }
 }
 

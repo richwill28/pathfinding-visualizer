@@ -1,10 +1,14 @@
 import { MAX_ROW, MAX_COL } from "../../constants/max";
-import { STYLE_UNVISITED, STYLE_WALL_DARK } from "../../constants/style";
+import {
+  STYLE_UNVISITED,
+  STYLE_WALL_DARK,
+  STYLE_WALL_LIGHT,
+} from "../../constants/style";
 import isEqual from "../../isEqual";
 import getRandomInt from "../../getRandomInt";
 import sleep from "../../sleep";
 
-export default async function binaryTree(grid, startNode, endNode) {
+export default async function binaryTree(grid, startNode, endNode, isDark) {
   // generate walls
   for (const row of grid) {
     for (const node of row) {
@@ -13,7 +17,7 @@ export default async function binaryTree(grid, startNode, endNode) {
           node.isWall = true;
 
           document.getElementById(`${node.row}-${node.col}`).className =
-            STYLE_WALL_DARK + " animate-wall";
+            (isDark ? STYLE_WALL_LIGHT : STYLE_WALL_DARK) + " animate-wall";
           await sleep(0.2);
         }
       }

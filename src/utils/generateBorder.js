@@ -1,56 +1,34 @@
 import { MAX_ROW, MAX_COL } from "./constants/max";
-import { STYLE_WALL_DARK } from "./constants/style";
+import { STYLE_WALL_DARK, STYLE_WALL_LIGHT } from "./constants/style";
 import isEqual from "./isEqual";
 import sleep from "./sleep";
 
-export default async function generateBorder(grid, startNode, endNode) {
-  // top
-  for (let i = 0; i < MAX_COL; i++) {
-    if (!isEqual(grid[0][i], startNode) && !isEqual(grid[0][i], endNode)) {
-      grid[0][i].isWall = true;
+export default async function generateBorder(grid, startNode, endNode, isDark) {
+  const d = [
+    { row: 0, col: 1 },
+    { row: 1, col: 0 },
+    { row: 0, col: -1 },
+    { row: -1, col: 0 },
+  ];
 
-      document.getElementById(`${0}-${i}`).className =
-        STYLE_WALL_DARK + " animate-wall";
-      await sleep(8);
+  let row = 0;
+  let col = 0;
+  for (let i = 0; i < 4; i++) {
+    while (row >= 0 && row <= MAX_ROW - 1 && col >= 0 && col <= MAX_COL - 1) {
+      if (
+        !isEqual(grid[row][col], startNode) &&
+        !isEqual(grid[row][col], endNode)
+      ) {
+        grid[row][col].isWall = true;
+
+        document.getElementById(`${row}-${col}`).className =
+          (isDark ? STYLE_WALL_LIGHT : STYLE_WALL_DARK) + " animate-wall";
+        await sleep(8);
+      }
+      row += d[i].row;
+      col += d[i].col;
     }
-  }
-
-  // right
-  for (let i = 1; i < MAX_ROW; i++) {
-    if (
-      !isEqual(grid[i][MAX_COL - 1], startNode) &&
-      !isEqual(grid[i][MAX_COL - 1], endNode)
-    ) {
-      grid[i][MAX_COL - 1].isWall = true;
-
-      document.getElementById(`${i}-${MAX_COL - 1}`).className =
-        STYLE_WALL_DARK + " animate-wall";
-      await sleep(8);
-    }
-  }
-
-  // bottom
-  for (let i = MAX_COL - 2; i >= 0; i--) {
-    if (
-      !isEqual(grid[MAX_ROW - 1][i], startNode) &&
-      !isEqual(grid[MAX_ROW - 1][i], endNode)
-    ) {
-      grid[MAX_ROW - 1][i].isWall = true;
-
-      document.getElementById(`${MAX_ROW - 1}-${i}`).className =
-        STYLE_WALL_DARK + " animate-wall";
-      await sleep(8);
-    }
-  }
-
-  // left
-  for (let i = MAX_ROW - 2; i >= 1; i--) {
-    if (!isEqual(grid[i][0], startNode) && !isEqual(grid[i][0], endNode)) {
-      grid[i][0].isWall = true;
-
-      document.getElementById(`${i}-${0}`).className =
-        STYLE_WALL_DARK + " animate-wall";
-      await sleep(8);
-    }
+    row = row === MAX_ROW ? MAX_ROW - 1 : row === -1 ? 0 : row;
+    col = col === MAX_COL ? MAX_COL - 1 : col === -1 ? 0 : col;
   }
 }

@@ -1,13 +1,12 @@
 import { STYLE_VISITED, STYLE_PATH } from "./constants/style";
-import { DELAY_VISIT, DELAY_PATH } from "./constants/delay";
 
-export function animatePath(visitedNodes, shortestPath) {
+export default function animatePath(visitedNodes, shortestPath) {
   for (let i = 1; i < visitedNodes.length - 1; i++) {
     setTimeout(() => {
       const node = visitedNodes[i];
       document.getElementById(`${node.row}-${node.col}`).className =
         STYLE_VISITED + " animate-visited";
-    }, DELAY_VISIT * i);
+    }, 12 * i);
   }
 
   setTimeout(() => {
@@ -16,7 +15,7 @@ export function animatePath(visitedNodes, shortestPath) {
         const node = shortestPath[i];
         document.getElementById(`${node.row}-${node.col}`).className =
           STYLE_PATH + " animate-path";
-      }, DELAY_PATH * i);
+      }, 40 * i);
     }
-  }, DELAY_VISIT * (visitedNodes.length - 2));
+  }, 12 * (visitedNodes.length - 2));
 }
