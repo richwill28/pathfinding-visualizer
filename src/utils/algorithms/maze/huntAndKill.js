@@ -9,9 +9,11 @@ import getRandomInt from "../../getRandomInt";
 import sleep from "../../sleep";
 
 export default async function huntAndKill(grid, startNode, endNode, isDark) {
+  renderWall(startNode, endNode, isDark);
+  await sleep(MAX_ROW * MAX_COL);
+
   const isVisited = [];
 
-  // generate walls
   for (const row of grid) {
     const isVisitedRow = [];
     for (const node of row) {
@@ -19,16 +21,6 @@ export default async function huntAndKill(grid, startNode, endNode, isDark) {
         if (node.row % 2 === 0 || node.col % 2 === 0) {
           node.isWall = true;
         }
-
-        await renderNode(
-          node.row,
-          node.col,
-          isDark ? STYLE_WALL_LIGHT : STYLE_WALL_DARK,
-          " animate-wall",
-          10,
-          startNode,
-          endNode
-        );
       }
       isVisitedRow.push(false);
     }
@@ -308,5 +300,43 @@ async function renderNode(
     document.getElementById(`${node.row}-${node.col}`).className =
       style + animation;
     await sleep(delay);
+  }
+}
+
+function renderWall(startNode, endNode, isDark) {
+  const walls = [];
+
+  for (let i = 0; i < MAX_COL; i++) {
+    let row = 0;
+    let col = i;
+    while (row >= 0 && row <= MAX_ROW - 1 && col >= 0 && col <= MAX_COL - 1) {
+      const node = { row: row, col: col };
+      if (!isEqual(node, startNode) && !isEqual(node, endNode)) {
+        walls.push(node);
+      }
+      row++;
+      col--;
+    }
+  }
+
+  for (let i = 1; i < MAX_ROW; i++) {
+    let row = i;
+    let col = MAX_COL - 1;
+    while (row >= 0 && row <= MAX_ROW - 1 && col >= 0 && col <= MAX_COL - 1) {
+      const node = { row: row, col: col };
+      if (!isEqual(node, startNode) && !isEqual(node, endNode)) {
+        walls.push(node);
+      }
+      row++;
+      col--;
+    }
+  }
+
+  let delay = 0;
+  for (const wall of walls) {
+    setTimeout(() => {
+      document.getElementById(`${wall.row}-${wall.col}`).className =
+        (isDark ? STYLE_WALL_LIGHT : STYLE_WALL_DARK) + " animate-wall";
+    }, delay++);
   }
 }
