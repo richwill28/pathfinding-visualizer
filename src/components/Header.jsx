@@ -6,6 +6,7 @@ import astar from "../utils/algorithms/graph/astar";
 import binaryTree from "../utils/algorithms/maze/binaryTree";
 import recursiveDivision from "../utils/algorithms/maze/recursiveDivision";
 import huntAndKill from "../utils/algorithms/maze/huntAndKill";
+import randomizedKruskal from "../utils/algorithms/maze/randomizedKruskal";
 import isEqual from "../utils/isEqual";
 import generateBorder from "../utils/generateBorder";
 import animatePath from "../utils/animatePath";
@@ -127,6 +128,12 @@ export default function Header({
                   >
                     HUNT-AND-KILL
                   </button>
+                  <button
+                    className="rounded text-[15px] text-left font-mono font-bold border-2 border-transparent hover:border-sky-400 p-1.5"
+                    onClick={() => handleMazeChoice("RANDOMIZED KRUSKAL")}
+                  >
+                    RANDOMIZED KRUSKAL
+                  </button>
                 </div>
               </div>
             </div>
@@ -212,6 +219,8 @@ function runMazeAlgorithm(maze, grid, startNode, endNode, isDark) {
     );
   } else if (maze === "HUNT-AND-KILL") {
     huntAndKill(grid, startNode, endNode, isDark);
+  } else if (maze === "RANDOMIZED KRUSKAL") {
+    randomizedKruskal(grid, startNode, endNode, isDark);
   }
 }
 
