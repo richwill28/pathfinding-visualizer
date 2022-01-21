@@ -20,12 +20,12 @@ export default async function huntAndKill(grid, startNode, endNode, isDark) {
           node.isWall = true;
         }
 
-        await renderGrid(
+        await renderNode(
           node.row,
           node.col,
           isDark ? STYLE_WALL_LIGHT : STYLE_WALL_DARK,
           " animate-wall",
-          0.1,
+          10,
           startNode,
           endNode
         );
@@ -96,7 +96,7 @@ async function randomWalk(
         unvisitedCount--;
         node.col -= 2;
 
-        await renderGrid(
+        await renderNode(
           node.row,
           node.col + 1,
           STYLE_UNVISITED,
@@ -105,7 +105,7 @@ async function randomWalk(
           startNode,
           endNode
         );
-        await renderGrid(
+        await renderNode(
           node.row,
           node.col,
           STYLE_UNVISITED,
@@ -123,7 +123,7 @@ async function randomWalk(
         unvisitedCount--;
         node.row -= 2;
 
-        await renderGrid(
+        await renderNode(
           node.row + 1,
           node.col,
           STYLE_UNVISITED,
@@ -132,7 +132,7 @@ async function randomWalk(
           startNode,
           endNode
         );
-        await renderGrid(
+        await renderNode(
           node.row,
           node.col,
           STYLE_UNVISITED,
@@ -150,7 +150,7 @@ async function randomWalk(
         unvisitedCount--;
         node.col += 2;
 
-        await renderGrid(
+        await renderNode(
           node.row,
           node.col - 1,
           STYLE_UNVISITED,
@@ -159,7 +159,7 @@ async function randomWalk(
           startNode,
           endNode
         );
-        await renderGrid(
+        await renderNode(
           node.row,
           node.col,
           STYLE_UNVISITED,
@@ -177,7 +177,7 @@ async function randomWalk(
         unvisitedCount--;
         node.row += 2;
 
-        await renderGrid(
+        await renderNode(
           node.row - 1,
           node.col,
           STYLE_UNVISITED,
@@ -186,7 +186,7 @@ async function randomWalk(
           startNode,
           endNode
         );
-        await renderGrid(
+        await renderNode(
           node.row,
           node.col,
           STYLE_UNVISITED,
@@ -211,7 +211,7 @@ async function hunt(grid, node, isVisited, unvisitedCount, startNode, endNode) {
           grid[i][j - 1].isWall = false;
           unvisitedCount--;
 
-          await renderGrid(
+          await renderNode(
             i,
             j - 1,
             STYLE_UNVISITED,
@@ -220,7 +220,7 @@ async function hunt(grid, node, isVisited, unvisitedCount, startNode, endNode) {
             startNode,
             endNode
           );
-          await renderGrid(i, j, STYLE_UNVISITED, "", 15, startNode, endNode);
+          await renderNode(i, j, STYLE_UNVISITED, "", 15, startNode, endNode);
 
           return { row: i, col: j, updatedCount: unvisitedCount };
         } else if (isVisited[i - 2][j]) {
@@ -228,7 +228,7 @@ async function hunt(grid, node, isVisited, unvisitedCount, startNode, endNode) {
           grid[i - 1][j].isWall = false;
           unvisitedCount--;
 
-          await renderGrid(
+          await renderNode(
             i - 1,
             j,
             STYLE_UNVISITED,
@@ -237,7 +237,7 @@ async function hunt(grid, node, isVisited, unvisitedCount, startNode, endNode) {
             startNode,
             endNode
           );
-          await renderGrid(i, j, STYLE_UNVISITED, "", 15, startNode, endNode);
+          await renderNode(i, j, STYLE_UNVISITED, "", 15, startNode, endNode);
 
           return { row: i, col: j, updatedCount: unvisitedCount };
         } else if (isVisited[i][j + 2]) {
@@ -245,7 +245,7 @@ async function hunt(grid, node, isVisited, unvisitedCount, startNode, endNode) {
           grid[i][j + 1].isWall = false;
           unvisitedCount--;
 
-          await renderGrid(
+          await renderNode(
             i,
             j + 1,
             STYLE_UNVISITED,
@@ -254,7 +254,7 @@ async function hunt(grid, node, isVisited, unvisitedCount, startNode, endNode) {
             startNode,
             endNode
           );
-          await renderGrid(i, j, STYLE_UNVISITED, "", 15, startNode, endNode);
+          await renderNode(i, j, STYLE_UNVISITED, "", 15, startNode, endNode);
 
           return { row: i, col: j, updatedCount: unvisitedCount };
         } else if (isVisited[i + 2][j]) {
@@ -262,7 +262,7 @@ async function hunt(grid, node, isVisited, unvisitedCount, startNode, endNode) {
           grid[i + 1][j].isWall = false;
           unvisitedCount--;
 
-          await renderGrid(
+          await renderNode(
             i + 1,
             j,
             STYLE_UNVISITED,
@@ -271,7 +271,7 @@ async function hunt(grid, node, isVisited, unvisitedCount, startNode, endNode) {
             startNode,
             endNode
           );
-          await renderGrid(i, j, STYLE_UNVISITED, "", 15, startNode, endNode);
+          await renderNode(i, j, STYLE_UNVISITED, "", 15, startNode, endNode);
 
           return { row: i, col: j, updatedCount: unvisitedCount };
         }
@@ -294,7 +294,7 @@ function findUnvisitedNeighbor(node, isVisited) {
   return false;
 }
 
-async function renderGrid(
+async function renderNode(
   row,
   col,
   style,
