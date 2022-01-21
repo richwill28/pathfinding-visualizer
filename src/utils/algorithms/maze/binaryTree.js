@@ -9,16 +9,14 @@ import getRandomInt from "../../getRandomInt";
 import sleep from "../../sleep";
 
 export default async function binaryTree(grid, startNode, endNode, isDark) {
-  // generate walls
+  renderWall(startNode, endNode, isDark);
+  await sleep(MAX_ROW * MAX_COL);
+
   for (const row of grid) {
     for (const node of row) {
       if (node.row % 2 === 0 || node.col % 2 === 0) {
         if (!isEqual(node, startNode) && !isEqual(node, endNode)) {
           node.isWall = true;
-
-          document.getElementById(`${node.row}-${node.col}`).className =
-            (isDark ? STYLE_WALL_LIGHT : STYLE_WALL_DARK) + " animate-wall";
-          await sleep(0.2);
         }
       }
     }
@@ -51,5 +49,24 @@ async function removeWall(grid, row, col, isRight) {
 
     document.getElementById(`${row + 1}-${col}`).className = STYLE_UNVISITED;
     await sleep(20);
+  }
+}
+
+function renderWall(startNode, endNode, isDark) {
+  const DELAY = 5;
+  for (let row = 0; row < MAX_ROW; row++) {
+    setTimeout(() => {
+      for (let col = 0; col < MAX_COL; col++) {
+        if (row % 2 === 0 || col % 2 === 0) {
+          const node = { row: row, col: col };
+          if (!isEqual(node, startNode) && !isEqual(node, endNode)) {
+            setTimeout(() => {
+              document.getElementById(`${node.row}-${node.col}`).className =
+                (isDark ? STYLE_WALL_LIGHT : STYLE_WALL_DARK) + " animate-wall";
+            }, DELAY * col);
+          }
+        }
+      }
+    }, DELAY * (MAX_COL / 2) * row);
   }
 }
