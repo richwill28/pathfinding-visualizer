@@ -23,7 +23,8 @@ export default function dijkstra(grid, startNode, endNode) {
     // traverse neighbors
     const neighbors = getUnvisitedNeighbors(grid, node);
     for (const neighbor of neighbors) {
-      if (!isInQueue(neighbor, unvisitedNodes)) {
+      if (node.distance + 1 < neighbor.distance) {
+        removeFromQueue(neighbor, unvisitedNodes);
         neighbor.distance = node.distance + 1;
         neighbor.parent = node;
         unvisitedNodes.push(neighbor);
@@ -53,11 +54,11 @@ function getUnvisitedNeighbors(grid, node) {
   return neighbors.filter((neighbor) => !neighbor.isVisited);
 }
 
-function isInQueue(node, queue) {
-  for (const element of queue) {
-    if (isEqual(node, element)) {
-      return true;
+function removeFromQueue(node, queue) {
+  for (let i = 0; i < queue.length; i++) {
+    if (isEqual(queue[i], node)) {
+      queue = queue.splice(i, 1);
+      break;
     }
   }
-  return false;
 }
