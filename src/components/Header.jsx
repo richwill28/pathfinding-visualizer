@@ -13,6 +13,7 @@ import animatePath from "../utils/animatePath";
 import { MAX_ROW, MAX_COL } from "../utils/constants/max";
 import { SunIcon, MoonIcon } from "./Icon";
 import { STYLE_UNVISITED } from "../utils/constants/style";
+import greedybfs from "../utils/algorithms/graph/greedybfs";
 
 export default function Header({
   gridState,
@@ -171,6 +172,12 @@ export default function Header({
                   >
                     A-STAR
                   </button>
+                  <button
+                    className="rounded text-[15px] text-left font-mono font-bold border-2 border-transparent hover:border-sky-400 p-1.5"
+                    onClick={() => handleAlgoChoice("GREEDY BFS")}
+                  >
+                    GREEDY BFS
+                  </button>
                 </div>
               </div>
             </div>
@@ -199,6 +206,8 @@ export function runGraphAlgorithm(algorithm, grid, startNode, endNode) {
     return dijkstra(grid, startNode, endNode);
   } else if (algorithm === "A*") {
     return astar(grid, startNode, endNode);
+  } else if (algorithm === "GREEDY BFS") {
+    return greedybfs(grid, startNode, endNode);
   }
 }
 
