@@ -5,21 +5,26 @@ import isEqual from "../../isEqual";
 export default function astar(grid, startNode, endNode) {
   const visitedNodes = [];
 
-  const heuristicDistance = initializeHeuristicDistance(grid, endNode);
+  const hcost = initializeHcost(grid, endNode);
+  const fcost = initializeFcost();
 
   const root = grid[startNode.row][startNode.col];
   root.distance = 0;
+  fcost[root.row][root.col] = root.distance + hcost[root.row][root.col];
   root.isVisited = true;
 
   // A* main routine
   const unvisitedNodes = [root];
   while (unvisitedNodes.length > 0) {
-    unvisitedNodes.sort(
-      (a, b) =>
-        a.distance +
-        heuristicDistance[a.row][a.col] -
-        (b.distance + heuristicDistance[b.row][b.col])
-    ); // node with smaller (distance + heuristic) has higher priority
+    unvisitedNodes.sort((a, b) => {
+      if (fcost[a.row][a.col] === fcost[b.row][b.col]) {
+        // tie-breaker
+        return hcost[a.row][a.col] - hcost[b.row][b.col];
+      } else {
+        return fcost[a.row][a.col] - fcost[b.row][b.col];
+      }
+    }); // node with smaller fcost has higher priority
+
     const node = unvisitedNodes.shift();
     if (node.isWall) continue; // skip wall
     if (node.distance === Infinity) break; // trapped
@@ -30,8 +35,12 @@ export default function astar(grid, startNode, endNode) {
     // traverse neighbors
     const neighbors = getUnvisitedNeighbors(grid, node);
     for (const neighbor of neighbors) {
-      if (!isInQueue(neighbor, unvisitedNodes)) {
-        neighbor.distance = node.distance + 1;
+      const distanceToNeighbor = node.distance + 1;
+      if (distanceToNeighbor < neighbor.distance) {
+        removeFromQueue(neighbor, unvisitedNodes);
+        neighbor.distance = distanceToNeighbor;
+        fcost[neighbor.row][neighbor.col] =
+          neighbor.distance + hcost[neighbor.row][neighbor.col];
         neighbor.parent = node;
         unvisitedNodes.push(neighbor);
       }
@@ -60,32 +69,44 @@ function getUnvisitedNeighbors(grid, node) {
   return neighbors.filter((neighbor) => !neighbor.isVisited);
 }
 
-function isInQueue(node, queue) {
-  for (const element of queue) {
-    if (isEqual(node, element)) {
-      return true;
+function removeFromQueue(node, queue) {
+  for (let i = 0; i < queue.length; i++) {
+    if (isEqual(queue[i], node)) {
+      queue = queue.splice(i, 1);
+      break;
     }
   }
-  return false;
 }
 
-function initializeHeuristicDistance(grid, endNode) {
-  const heuristicDistance = [];
+function initializeHcost(grid, endNode) {
+  const hcost = [];
   for (let i = 0; i < MAX_ROW; i++) {
     const row = [];
     for (let j = 0; j < MAX_COL; j++) {
-      row.push(getHeuristicDistance(grid[i][j], endNode));
+      row.push(getHeuristic(grid[i][j], endNode));
     }
-    heuristicDistance.push(row);
+    hcost.push(row);
   }
-  return heuristicDistance;
+  return hcost;
 }
 
 // reference: https://theory.stanford.edu/~amitp/GameProgramming/Heuristics.html
-function getHeuristicDistance(a, b) {
+function getHeuristic(a, b) {
   // manhattan distance implementation
-  const D = 1.2;
+  const D = 1;
   const drow = Math.abs(a.row - b.row);
   const dcol = Math.abs(a.col - b.col);
   return D * (drow + dcol);
+}
+
+function initializeFcost() {
+  const fcost = [];
+  for (let i = 0; i < MAX_ROW; i++) {
+    const row = [];
+    for (let j = 0; j < MAX_COL; j++) {
+      row.push(Infinity);
+    }
+    fcost.push(row);
+  }
+  return fcost;
 }
