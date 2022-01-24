@@ -1,21 +1,31 @@
 import { STYLE_VISITED, STYLE_PATH } from "./constants/style";
+import isEqual from "./isEqual";
 
-export default function animatePath(visitedNodes, shortestPath) {
-  for (let i = 1; i < visitedNodes.length - 1; i++) {
+export default function animatePath(
+  visitedNodes,
+  shortestPath,
+  startNode,
+  endNode
+) {
+  for (let i = 0; i < visitedNodes.length; i++) {
     setTimeout(() => {
       const node = visitedNodes[i];
-      document.getElementById(`${node.row}-${node.col}`).className =
-        STYLE_VISITED + " animate-visited";
-    }, 10 * i);
+      if (!isEqual(node, startNode) && !isEqual(node, endNode)) {
+        document.getElementById(`${node.row}-${node.col}`).className =
+          STYLE_VISITED + " animate-visited";
+      }
+    }, 8 * i);
   }
 
   setTimeout(() => {
-    for (let i = 1; i < shortestPath.length - 1; i++) {
+    for (let i = 0; i < shortestPath.length; i++) {
       setTimeout(() => {
         const node = shortestPath[i];
-        document.getElementById(`${node.row}-${node.col}`).className =
-          STYLE_PATH + " animate-path";
-      }, 40 * i);
+        if (!isEqual(node, startNode) && !isEqual(node, endNode)) {
+          document.getElementById(`${node.row}-${node.col}`).className =
+            STYLE_PATH + " animate-path";
+        }
+      }, 30 * i);
     }
-  }, 10 * (visitedNodes.length - 2));
+  }, 8 * visitedNodes.length);
 }

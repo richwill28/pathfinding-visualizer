@@ -3,6 +3,8 @@ import bfs from "../utils/algorithms/graph/bfs";
 import dfs from "../utils/algorithms/graph/dfs";
 import dijkstra from "../utils/algorithms/graph/dijkstra";
 import astar from "../utils/algorithms/graph/astar";
+import greedybfs from "../utils/algorithms/graph/greedybfs";
+import bidirectionalbfs from "../utils/algorithms/graph/bidirectionalbfs";
 import binaryTree from "../utils/algorithms/maze/binaryTree";
 import recursiveDivision from "../utils/algorithms/maze/recursiveDivision";
 import huntAndKill from "../utils/algorithms/maze/huntAndKill";
@@ -13,7 +15,6 @@ import animatePath from "../utils/animatePath";
 import { MAX_ROW, MAX_COL } from "../utils/constants/max";
 import { SunIcon, MoonIcon } from "./Icon";
 import { STYLE_UNVISITED } from "../utils/constants/style";
-import greedybfs from "../utils/algorithms/graph/greedybfs";
 
 export default function Header({
   gridState,
@@ -52,7 +53,7 @@ export default function Header({
       startNode,
       endNode
     );
-    animatePath(visitedNodes, shortestPath);
+    animatePath(visitedNodes, shortestPath, startNode, endNode);
 
     // re-render grid
     setTimeout(() => {
@@ -178,6 +179,12 @@ export default function Header({
                   >
                     GREEDY BFS
                   </button>
+                  <button
+                    className="rounded text-[15px] text-left font-mono font-bold border-2 border-transparent hover:border-sky-400 p-1.5"
+                    onClick={() => handleAlgoChoice("BIDIRECTIONAL BFS")}
+                  >
+                    BIDIRECTIONAL BFS
+                  </button>
                 </div>
               </div>
             </div>
@@ -208,6 +215,8 @@ export function runGraphAlgorithm(algorithm, grid, startNode, endNode) {
     return astar(grid, startNode, endNode);
   } else if (algorithm === "GREEDY BFS") {
     return greedybfs(grid, startNode, endNode);
+  } else if (algorithm === "BIDIRECTIONAL BFS") {
+    return bidirectionalbfs(grid, startNode, endNode);
   }
 }
 
