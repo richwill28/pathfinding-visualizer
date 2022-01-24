@@ -6,3 +6,4 @@ export const STYLE_END = STYLE_UNVISITED + " bg-rose-400";
 export const STYLE_WALL_DARK = STYLE_UNVISITED + " bg-gray-700";
 export const STYLE_WALL_LIGHT = STYLE_UNVISITED + " bg-gray-100";
 export const STYLE_PATH = STYLE_UNVISITED + " bg-amber-200";
+export const STYLE_BACKTRACK = STYLE_UNVISITED + " bg-sky-400";

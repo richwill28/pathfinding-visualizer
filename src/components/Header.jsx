@@ -9,6 +9,7 @@ import binaryTree from "../utils/algorithms/maze/binaryTree";
 import recursiveDivision from "../utils/algorithms/maze/recursiveDivision";
 import huntAndKill from "../utils/algorithms/maze/huntAndKill";
 import randomizedKruskal from "../utils/algorithms/maze/randomizedKruskal";
+import recursiveBacktracker from "../utils/algorithms/maze/recursiveBacktracker";
 import isEqual from "../utils/isEqual";
 import generateBorder from "../utils/generateBorder";
 import animatePath from "../utils/animatePath";
@@ -60,7 +61,7 @@ export default function Header({
       const newGrid = grid.slice();
       setGrid(newGrid);
       setIsGraphVisualized(true);
-    }, 10 * visitedNodes.length + 40 * (shortestPath.length + 40)); // not arbitrary value
+    }, 8 * visitedNodes.length + 30 * (shortestPath.length + 30)); // not arbitrary value
   };
 
   const [isDark, setIsDark] = isDarkState;
@@ -109,7 +110,7 @@ export default function Header({
             {maze}
           </button>
           <div className="hidden group-hover:table">
-            <div className="absolute z-10 -ml-[12px] transform px-2 w-screen max-w-[215px] py-1.5">
+            <div className="absolute z-10 -ml-[12px] transform px-2 w-screen max-w-[225px] py-1.5">
               <div className="shadow-lg ring-1 ring-black dark:rink-white ring-opacity-5">
                 <div className="relative grid gap-1 bg-white px-2 py-2 rounded dark:bg-slate-900">
                   <button
@@ -136,6 +137,12 @@ export default function Header({
                   >
                     RANDOMIZED KRUSKAL
                   </button>
+                  <button
+                    className="rounded text-[15px] text-left font-mono font-bold border-2 border-transparent hover:border-sky-400 p-1.5"
+                    onClick={() => handleMazeChoice("RECURSIVE BACKTRACKER")}
+                  >
+                    RECURSIVE BACKTRACKER
+                  </button>
                 </div>
               </div>
             </div>
@@ -146,7 +153,7 @@ export default function Header({
             {algorithm}
           </button>
           <div className="hidden group-hover:table">
-            <div className="absolute z-10 -ml-[12px] transform px-2 w-screen max-w-[215px] py-1.5">
+            <div className="absolute z-10 -ml-[12px] transform px-2 w-screen max-w-[225px] py-1.5">
               <div className="shadow-lg ring-1 ring-black dark:rink-white ring-opacity-5">
                 <div className="relative grid gap-1 bg-white px-2 py-2 rounded dark:bg-slate-900">
                   <button
@@ -239,6 +246,8 @@ function runMazeAlgorithm(maze, grid, startNode, endNode, isDark) {
     huntAndKill(grid, startNode, endNode, isDark);
   } else if (maze === "RANDOMIZED KRUSKAL") {
     randomizedKruskal(grid, startNode, endNode, isDark);
+  } else if (maze === "RECURSIVE BACKTRACKER") {
+    recursiveBacktracker(grid, startNode, endNode, isDark);
   }
 }
 
