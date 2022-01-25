@@ -19,7 +19,14 @@ export default function astar(grid, startNode, endNode) {
     unvisitedNodes.sort((a, b) => {
       if (fcost[a.row][a.col] === fcost[b.row][b.col]) {
         // tie-breaker
-        return hcost[a.row][a.col] - hcost[b.row][b.col];
+        // return the square of euclidean distance so the result is
+        // bias towards the path that lies along the straight line
+        // path from the current node to the end node
+        return (
+          (a.row - endNode.row) ** 2 +
+          (a.col - endNode.col) ** 2 -
+          ((b.row - endNode.row) ** 2 + (b.col - endNode.col) ** 2)
+        );
       } else {
         return fcost[a.row][a.col] - fcost[b.row][b.col];
       }
