@@ -1,6 +1,11 @@
 # Pathfinding Visualizer
 
-![pathfinding](./public/readme/pathfinding.gif)
+<img
+  alt="pathfinding-demo"
+  src="./public/readme/pathfinding.gif"
+  width=60%
+  height=auto
+/>
 
 The aim of this project is to challenge myself to create a beautiful visualization for pathfinding and maze generation algorithm.
 
