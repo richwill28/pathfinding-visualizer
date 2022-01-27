@@ -1,9 +1,9 @@
 # Pathfinding Visualizer
 
 <img
-  alt="pathfinding-demo"
+  alt="pathfinding"
   src="./public/readme/pathfinding.gif"
-  width=60%
+  width=80%
   height=auto
 />
 
